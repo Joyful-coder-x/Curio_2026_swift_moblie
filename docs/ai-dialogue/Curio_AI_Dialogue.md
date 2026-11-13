@@ -66,3 +66,10 @@ User, verbatim:
 > 确认一下你这个计划，应该是用英文的，然后checkpoint是设在每周五以前，因为我课程是周五的。
 
 Assistant summary: changed the plans to English only and set checkpoints before Friday class, aiming to finish Thursday evening. Dates: November 20, November 27, December 4 and December 11, with final presentation readiness before December 18 and a buffer through approximately December 20.
+
+## Clarification: separate projects and initial parallel tests
+
+User, verbatim:
+> [https://github.com/Joyful-coder-x/exercise_companion_2026_swift_moblie.git](https://github.com/Joyful-coder-x/exercise_companion_2026_swift_moblie.git) 这个 exercise companion 应该在这里头，不在那个。就是这是两个分开的 project，然后要有自己的计划。就是这两个会并行。准确地说是，我下周会……我下周五前会测试，会写两个小测试，来测试它们两个的可能性。然后确定以后，在下周五会把它再减成一个，然后去把它落实。
+
+Assistant summary: separated the repositories and plans. Both small feasibility tests run in parallel before Friday, November 20, 2026. On that Friday, compare findings and select one project; only the selected project proceeds to full implementation. The other is paused. Earlier plans describing the sequence less precisely are superseded by this clarification.

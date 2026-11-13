@@ -1,27 +1,26 @@
-# Curio · iOS Final Project Candidates
+# Curio
 
-Two project directions are being prototyped before a final selection: **Curio**, a photo-invitation and shared-journal app, and **Exercising Companion**, a mobile movement companion inspired by desktop pets. Both will be tested with classmates and the professor before choosing one for full implementation.
+An iOS app concept for noticing everyday discoveries through photo invitations, individual photo letters and a shared journal. Swift and SwiftUI are the intended implementation tools.
 
-## Proposals
+## Proposal
 
-| Project | English | Chinese / 中文 |
-|---|---|---|
-| Curio | [Original concept proposal](docs/English/Match_Me_Concept_Proposal_EN.docx) | [原始概念提案](docs/Chinese/Match_Me_Concept_Proposal_ZH.docx) |
-| Exercising Companion | [Concept proposal](docs/English/Exercising_Companion_Proposal_EN.md) | [概念提案](docs/Chinese/Exercising_Companion_Proposal_ZH.md) |
+- [English — original concept proposal](docs/English/Match_Me_Concept_Proposal_EN.docx)
+- [Chinese / 中文 — 原始概念提案](docs/Chinese/Match_Me_Concept_Proposal_ZH.docx)
 
-The original Curio documents use the previous working name **Match Me**; their contents remain unchanged. The current confirmed name is **Curio**. Exercising Companion is a working title.
+The original documents retain the previous working name Match Me. The current name is **Curio**.
 
-## Work plans
+## Plan and feasibility test
 
-[Four-week plans for both projects](docs/plans/Four_Week_Plans.md) — written in English, with checkpoints **before Friday class**. Technical decisions and research come first, followed by a usable prototype, then two weeks of testing and refinement. Target completion is around December 20, 2026.
+[Curio's four-week plan](docs/plans/Four_Week_Plan.md) is written in English, with all checkpoints before Friday class.
 
-## AI dialogue records
+Before **Friday, November 20, 2026**, build and test a small Curio feasibility prototype in parallel with a separate Exercising Companion prototype. On November 20, compare findings with classmates and the professor and choose one project. Full implementation continues only for the selected project; the other is paused. If Curio is selected, a usable MVP is due before November 27, followed by two weeks of testing and refinement, with completion around December 20.
 
-- [Curio: original user wording and assistant summaries](docs/ai-dialogue/Curio_AI_Dialogue.md)
-- [Exercising Companion: original user wording and assistant summaries](docs/ai-dialogue/Exercising_Companion_AI_Dialogue.md)
+## AI dialogue
 
-These records document the visible design conversation, including Curio's naming discussion and visual prototype request. They distinguish quotations from summaries and proposed features from completed work.
+[Curio dialogue record](docs/ai-dialogue/Curio_AI_Dialogue.md) preserves original user wording and summarizes assistant responses, including naming and the visual prototype request.
 
 ## Current status
 
-Concept proposals, plans and dialogue records are available. A static visual mockup of Curio was generated in chat; it is not a working iOS app. Swift and SwiftUI are the intended implementation tools. No runnable application has been added yet.
+Concept documentation is available. A static visual mockup was generated in chat; no runnable iOS app has been added yet.
+
+Exercising Companion is a separate project with its own [repository, proposal and plan](https://github.com/Joyful-coder-x/exercise_companion_2026_swift_moblie).
