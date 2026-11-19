@@ -73,3 +73,14 @@ User, verbatim:
 > [https://github.com/Joyful-coder-x/exercise_companion_2026_swift_moblie.git](https://github.com/Joyful-coder-x/exercise_companion_2026_swift_moblie.git) 这个 exercise companion 应该在这里头，不在那个。就是这是两个分开的 project，然后要有自己的计划。就是这两个会并行。准确地说是，我下周会……我下周五前会测试，会写两个小测试，来测试它们两个的可能性。然后确定以后，在下周五会把它再减成一个，然后去把它落实。
 
 Assistant summary: separated the repositories and plans. Both small feasibility tests run in parallel before Friday, November 20, 2026. On that Friday, compare findings and select one project; only the selected project proceeds to full implementation. The other is paused. Earlier plans describing the sequence less precisely are superseded by this clarification.
+
+## Ongoing instruction log
+
+### 2026-11-19 — Project selection and dialogue recording rule
+
+**User instruction (verbatim)**
+> 是这样的，现在已经确定不再跟进这个卓宠的这个APP。然后我们现在把重心完全放在这个 Quro 这个照片的这一个方向。然后从现在开始，我每一次和你给你一个指令以后，你都要把这个指令原话放到这个 Quro 的 AI Dialog 里头。然后如果我用中文和你对话的话，你给我一个简单的一句话左右的英文 summary，然后再给我一个你的回复的一句话左右的 summary。这是一件事儿。然后你现在先给自己写一个有关这个的 note。
+
+**User request summary (English):** Stop pursuing the desktop-pet app, focus fully on the photo project, and write a persistent note requiring each future instruction to be logged verbatim with a one-sentence English request summary for Chinese messages and a one-sentence assistant response summary.
+
+**Assistant response summary (English):** Added a persistent AGENTS.md note recording the project decision and required dialogue workflow, and logged this instruction in Curio's AI dialogue.
