@@ -2,6 +2,8 @@
 
 Date: November 19, 2026. Status: proposed implementation contract, not implemented code or final product rules.
 
+For the current publishing and follow test, use the [publish and follow assignment](Publish_and_Follow_Test_Request.md). Its public and follower-based access rules supersede the private-test allowlist below for open invitations.
+
 ## 1. Workstream boundary
 
 The user clarified that product-flow implementation and Firebase belong to the same backend assignment. The other workstream covers detailed product rules, frontend flow and UI, which will be worked through with the user afterward. Do not design finished pages or claim that the temporary rules below are final decisions.
