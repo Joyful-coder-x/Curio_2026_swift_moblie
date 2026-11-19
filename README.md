@@ -33,6 +33,10 @@ These are proposed features, not completed functionality. The first test focuses
 
 Before **Friday, November 20, 2026**, build and test a small Curio feasibility prototype in parallel with a separate Exercising Companion prototype. On November 20, compare findings with classmates and the professor and choose one project. Full implementation continues only for the selected project; the other is paused. If Curio is selected, a usable MVP is due before November 27, followed by two weeks of testing and refinement, with completion around December 20.
 
+## Backend assignment
+
+[Firebase backend feasibility brief and acceptance tests](docs/backend/Firebase_Backend_Test_Brief.md) — proposed data model, callable APIs, permissions and a real multi-user exchange test; temporary business rules are explicit, with frontend and final rule design deferred.
+
 ## AI dialogue
 
 [Curio dialogue record](docs/ai-dialogue/Curio_AI_Dialogue.md) preserves original user wording and summarizes assistant responses, including naming and the visual prototype request.

@@ -93,3 +93,21 @@ Assistant summary: separated the repositories and plans. Both small feasibility 
 **User request summary (English):** Explain Curio's purpose, current progress and available deliverables to an unfamiliar client, then recommend the next steps and intended outcomes from a product manager's perspective.
 
 **Assistant response summary (English):** Reviewed the current repository, distinguished the concept documents and static mockup from unimplemented app features, noted the completed decision to focus on Curio, and recommended a small invitation-to-journal prototype followed by observed user testing and a two-device exchange.
+
+### 2026-11-19 — Core test assignment and specific Firebase data management
+
+**User instruction (verbatim)**
+> 这样分成两条线。现在按照我, so based on the outline that we already have created, what is the basic core function I should test? And how should I test it? What feature should I do? In other words, I want to assign, create a test set to another person. How should I assign them? What should I make them do? What should be the testing criteria to see if they done the work correctly? Clearly give a direction, point out what page we should have, what feature we should use, etc. In particular, clearly point out how the data will be stored and what feature we should use. In particular, I want to use Firebase. And look at the plan currently, what should the Firebase, how should Firebase manage my data? Be really specific.
+
+**User request summary (English):** Define a concrete assignable core-function test with features, implementation direction, data storage and acceptance criteria, specifically using Firebase.
+
+**Assistant response summary (English):** Initially proposed the wrong workstream split, then incorporated the user's correction into a detailed backend assignment covering Firebase services, schema, callable APIs, access control, upload recovery and acceptance tests.
+
+### 2026-11-19 — Correct workstream split: backend first, frontend and rules afterward
+
+**User instruction (verbatim)**
+> 不是产品流程验证和 Firebase 技术两条路线，是这两个是一条路线。然后还有一条路线是，就是规则路线，它到底要怎么运行，到底有哪些规则，哪些什么情况开始，什么情况结束。然后还有就 UI 啊这一系列，就是产品流程验证和 Firebase 都是 backend。我现在要把它分成 backend 和 frontend，先把 backend 的东西明确下来，然后交给另一个人做。然后咱们再去走 frontend。可以理解吗。
+
+**User request summary (English):** Treat product-flow implementation and Firebase as one backend assignment for another developer, and defer detailed product rules, frontend flow and UI to the separate workstream.
+
+**Assistant response summary (English):** Created and linked an English Firebase backend handoff brief with explicit temporary rules, data ownership, APIs and fourteen acceptance cases, while deferring frontend design and making no infrastructure deployment or implementation claim.
