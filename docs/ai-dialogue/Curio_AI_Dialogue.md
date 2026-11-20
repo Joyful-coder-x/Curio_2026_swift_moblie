@@ -262,3 +262,12 @@ The earlier companion-only dialogue and its documentation requests are kept in t
 > can you see the newlly add thing in repo
 
 **Assistant response summary (English):** Confirmed the v2 files on GitHub, including the SwiftUI prototype and Firebase callable functions, and identified the iOS target’s documented simulator demo mode.
+
+### 2026-11-19 — Thread layouts across Discover, Inbox and Mine
+
+**User instruction (verbatim)**
+> 呃，看一下现在的这个这个就是code的逻辑，然后把前面这个九宫格的讨论就是结合在一起然后分别设计一下这个 strat在不同的地方应该怎样出现。比如说它现在在 discover这个页面应该长什么样？然后在 inbox page应该长什么样？在 mine应该长什么样？然后还有一点就是就因为他现在看起来感觉一个就 discover page我希望有很多 strats，就首先它肯定是两行的，就是左边就是你要有它能 fit下很多个 strat，这样你才能找到你对哪个感兴趣。至少要是双行的，就是然后 inbox也是类似的问题然后 mine的逻辑需要再盘一盘
+
+**User request summary (English):** Review the current SwiftUI logic and design denser thread presentations for Discover, Inbox and Mine using the adaptive photo cover.
+
+**Assistant response summary (English):** Added a three-surface layout study with two-column discovery, grouped inbox updates and an active/archive personal collection.
