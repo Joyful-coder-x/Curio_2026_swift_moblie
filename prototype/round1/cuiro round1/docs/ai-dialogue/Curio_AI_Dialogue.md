@@ -47,3 +47,10 @@
 > Immediate blocker: open the .xcodeproj so the Xcode toolbar shows the cuiro round1 scheme. Once Xcode reports the target, I can proceed with implementation.https://github.com/Joyful-coder-x/Curio_2026_swift_moblie.git
 
 **Assistant response summary (English):** Verified one active `cuiro round1` app target and scheme, successfully built the starter app, confirmed Firebase is not yet linked, and committed the already-staged Xcode project plus this log locally; the push failed because GitHub HTTPS credentials were unavailable.
+
+### 2026-11-19 — Identify what can be tested now
+
+**User instruction (verbatim)**
+> is there some thing I can test now?
+
+**Assistant response summary (English):** Ran a simulator smoke test of the current starter app and explained which behavior is available to test before Curio screens and Firebase integration are implemented.
