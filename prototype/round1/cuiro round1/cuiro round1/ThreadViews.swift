@@ -23,6 +23,7 @@ struct PhotoFormView: View {
     @State private var photoError: String?
     @State private var showsCamera = false
     @State private var isConfirmed = false
+    @State private var submitIsArmed = false
 
     private let choices = [
         ("bicycle", "yellow"), ("camera.macro", "orange"),
@@ -57,7 +58,11 @@ struct PhotoFormView: View {
                         mode: mode,
                         prompt: $prompt,
                         isPrivate: $isPrivate,
-                        onRetake: { isConfirmed = false },
+                        canSubmit: submitIsArmed,
+                        onRetake: {
+                            submitIsArmed = false
+                            isConfirmed = false
+                        },
                         onSubmit: submit
                     )
                 } else {
@@ -87,6 +92,11 @@ struct PhotoFormView: View {
                     }
                     Button {
                         isConfirmed = true
+                        submitIsArmed = false
+                        Task {
+                            try? await Task.sleep(for: .milliseconds(400))
+                            submitIsArmed = true
+                        }
                     } label: {
                         Text("Use this photo")
                             .frame(maxWidth: .infinity)
@@ -218,6 +228,7 @@ struct ConfirmedPhotoForm: View {
     let mode: PhotoFormMode
     @Binding var prompt: String
     @Binding var isPrivate: Bool
+    let canSubmit: Bool
     let onRetake: () -> Void
     let onSubmit: () -> Void
     @FocusState private var promptIsFocused: Bool
@@ -260,7 +271,7 @@ struct ConfirmedPhotoForm: View {
             .foregroundStyle(.secondary)
         Button(submitTitle, action: onSubmit)
             .buttonStyle(.borderedProminent)
-            .disabled(mode == .create && prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            .disabled(!canSubmit || (mode == .create && prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty))
             .frame(maxWidth: .infinity)
     }
 
