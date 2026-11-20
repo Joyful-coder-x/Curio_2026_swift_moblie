@@ -287,3 +287,12 @@ The earlier companion-only dialogue and its documentation requests are kept in t
 **User request summary (English):** Slightly reduce the photo footprint and give each photo an instant-print frame.
 
 **Assistant response summary (English):** Reduced Home and Mine cover widths to 92% and added warm white frames with deeper bottom borders scaled to each photo grid.
+
+### 2026-11-19 — One instant print per thread
+
+**User instruction (verbatim)**
+> 理解有误，是这四张，就是这四张或者是九张或者是一张是泰利德的格式。然后那个字，因为帕利德不是一个长方形吗？然后它底下多余的那一块正好可以放字 然后有一点点复古的感觉。然后整个就是整个图片现在占这个屏幕太多了，看着有点闹。但是图片就是这四张图或这九张图形成的是一张图片，然后给这一张图片加一个派利德式的框框。然后同时把那个字，就是底下的比如说这个 prompt也放到这个框框里。可以理解为上面是一个正方形的图片，图片底下是一排就是有点像 caption, subtitle这种。然后整个被一个有点像拍立得式的白框框给框住
+
+**User request summary (English):** Treat each square photo or collage as one smaller instant print with its prompt inside the wide bottom margin.
+
+**Assistant response summary (English):** Updated the Home and Mine browser mockup to frame each whole collage and its caption together, with more space between cards.
