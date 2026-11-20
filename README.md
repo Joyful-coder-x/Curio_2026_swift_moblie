@@ -53,6 +53,8 @@ Before **Friday, November 20, 2026**, build and test a small Curio feasibility p
 
 ## Current status
 
-Concept documentation is available. A static visual mockup was generated in chat; no runnable iOS app has been added yet.
+A runnable SwiftUI Round One simulator app now lives in `prototype/round1/cuiro round1`. The current local demo includes a two-column Discover feed, shared adaptive Polaroid collages, Inbox rows, Mine filters, a settings-based A–J scenario-account switcher, square photo crop/review, local thread chat and personalized saved journals. The SwiftUI target builds and the documented simulator checks cover Following, scenario fixtures, dark saved frames and retained pre-join conversation history.
+
+The app still uses in-memory fixtures. Firebase packages resolve, and emulator configuration, rules and callable-function starters are present, but Auth/Firestore/Storage/Functions are not yet connected end to end from the iOS repository. Private access, real cross-device synchronization, transaction-safe ninth-slot acceptance and server-enforced expiry therefore remain incomplete. See the [current UI audit](prototype/round1/cuiro%20round1/docs/progress/Curio_UI_Flow_Audit_2026-11-19.md) and [progress dialogue](prototype/round1/cuiro%20round1/docs/ai-dialogue/Curio_Progress_Dialogue.md).
 
 Exercising Companion is a separate project with its own [repository, proposal and plan](https://github.com/Joyful-coder-x/exercise_companion_2026_swift_moblie).

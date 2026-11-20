@@ -69,11 +69,11 @@ struct ThreadPolaroid: View {
     }
 
     private var paperColor: Color {
-        archived || thread.isExpired ? .curioPaper : .deadlinePaper(expiresAt: thread.expiresAt)
+        archived || thread.isExpired ? .curioAction : .deadlinePaper(expiresAt: thread.expiresAt)
     }
 
     private var captionColor: Color {
-        deadlineProgress > 0.56 && !archived ? .white : .curioInk
+        archived || thread.isExpired || deadlineProgress > 0.56 ? .white : .curioInk
     }
 
     private var personalizedPhotos: [CurioPhoto?] {
@@ -182,7 +182,7 @@ struct CompactThreadThumbnail: View {
     }
 
     private var paperColor: Color {
-        thread.isExpired ? .curioPaper : .deadlinePaper(expiresAt: thread.expiresAt)
+        thread.isExpired ? .curioAction : .deadlinePaper(expiresAt: thread.expiresAt)
     }
 }
 

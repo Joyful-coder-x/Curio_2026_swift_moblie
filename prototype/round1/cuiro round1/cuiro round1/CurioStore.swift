@@ -300,10 +300,25 @@ final class CurioStore {
         let symbols = ["bicycle", "camera.macro", "umbrella.fill", "sunflower.fill", "carrot.fill", "window.vertical.open", "cloud.sun.fill", "circle.hexagongrid.fill", "eye.fill"]
         let colors = ["rose", "gold", "blue", "ochre", "green", "plum", "mint", "orange", "pink"]
         let base = Date().addingTimeInterval(-120)
+        let creatorIDs = [
+            "A", "I", "E", "D", "A", "H", "I", "D", "A", "E",
+            "F", "H", "I", "D", "A", "E", "F", "H", "I", "D",
+            "A", "E", "F", "H", "I"
+        ]
+        let joinTestIndexes: Set<Int> = [1, 2, 3, 6, 10, 14, 18, 22]
+        let regularContributorPool = ["D", "E", "F", "H", "I", "C", "J", "G"]
         var result = prompts.enumerated().map { index, prompt in
-            let count = [1, 1, 3, 5, 4, 5, 2, 7, 1][index % 9]
-            let creatorIndex = index % users.count
-            let contributorIDs = (0..<count).map { users[($0 + creatorIndex) % users.count].id }
+            let creatorID = creatorIDs[index]
+            let count = index == 4 ? 9 : [1, 1, 3, 5, 4, 5, 2, 7, 1][index % 9]
+            var contributorIDs = [creatorID]
+            if joinTestIndexes.contains(index), count > 1, creatorID != "C" {
+                contributorIDs.append("C")
+            }
+            for candidate in regularContributorPool where contributorIDs.count < count {
+                if !contributorIDs.contains(candidate) {
+                    contributorIDs.append(candidate)
+                }
+            }
             let photos = contributorIDs.enumerated().map { offset, userID in
                 CurioPhoto(
                     id: UUID(),
@@ -313,15 +328,37 @@ final class CurioStore {
                     acceptedAt: base.addingTimeInterval(Double(index * 4 + offset))
                 )
             }
+            let messages: [CurioMessage]
+            if index == 2 {
+                messages = [
+                    CurioMessage(
+                        id: UUID(),
+                        userID: creatorID,
+                        body: "I noticed the color before the rain started.",
+                        sentAt: base.addingTimeInterval(Double(index * 4) + 0.5)
+                    )
+                ]
+            } else if index == 1 {
+                messages = [
+                    CurioMessage(
+                        id: UUID(),
+                        userID: creatorID,
+                        body: "I found this on my walk.",
+                        sentAt: base.addingTimeInterval(200)
+                    )
+                ]
+            } else {
+                messages = []
+            }
             return CurioThread(
                 id: index == 0 ? "YELLOW" : "DISCOVER-\(index + 1)",
-                creatorID: users[creatorIndex].id,
+                creatorID: creatorID,
                 prompt: prompt,
-                isPrivate: false,
-                expiresAt: Date().addingTimeInterval(Double(600 - index * 8)),
+                isPrivate: creatorID == "H" && index % 2 == 1,
+                expiresAt: Date().addingTimeInterval(index == 9 ? 45 : Double(600 - index * 8)),
                 photos: photos,
-                messages: index == 1 ? [CurioMessage(id: UUID(), userID: contributorIDs[0], body: "I found this on my walk.", sentAt: base.addingTimeInterval(200))] : [],
-                deliveredTo: Set(users.map(\.id).filter { $0 != users[creatorIndex].id })
+                messages: messages,
+                deliveredTo: Set(users.map(\.id).filter { $0 != creatorID })
             )
         }
 

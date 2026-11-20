@@ -19,6 +19,7 @@ Published photos, including the opening photo, cannot be edited or withdrawn by 
 
 - Following is long-term and controls suggestions. It is one-way and takes effect immediately. Preventing a follow affects that relationship and suggestions. Public threads remain reachable through search or a shared link.
 - The creator and accepted contributors are the group. Their ability to speak lasts until the 12-hour deadline. Keep the contributor roster afterward for credit, cover layout and read access to the archived conversation.
+- Membership unlocks the thread's retained conversation from the beginning, including messages sent before that person's photo was accepted; it does not start an empty personal history at join time.
 - Signed-in Curio users can see the photos and captions. Only the creator and accepted contributors can open the chat, including from a shared journal. Following, unfollowing or viewing a link does not change participation history.
 - The journal's Contributors section allows an optional follow action. Participation never automatically creates a follow relationship.
 

@@ -131,7 +131,83 @@ Future progress entries will pair the exact user command that caused a material 
 
 > add this: for that are closer to deadline(10min) make the color darker, that is the closer it is to the 10 mmin deadline, the more close it is to 502653, the apply to the white frame of the images
 
-**Assistant response/action summary:** Changed active Polaroid paper frames to interpolate from warm paper toward `#502653` as the ten-minute deadline approaches, including compact Inbox thumbnails, while keeping archived paper light and maintaining caption contrast.
+**Assistant response/action summary:** Changed active Polaroid paper frames to interpolate from warm paper toward `#502653` as the ten-minute deadline approaches, including compact Inbox thumbnails; a later direction keeps archived frames at the final dark color.
+
+#### Keep saved journals at the final deadline color
+
+**User command (verbatim)**
+
+> saved one should be dark purpr, since it reach the 10 min
+
+**Assistant response/action summary:** Changed expired and saved Polaroid frames and compact thumbnails to remain at the final dark plum `#502653`, with white prompt text for contrast.
+
+#### Align fixtures with tester roles
+
+**User command (verbatim)**
+
+> for exaplem Jun saved jornal, do not have it join any ongoing post, Maya should only have post she create etc...
+
+**Assistant response/action summary:** Reorganized active fixtures so Jun/B has no ongoing membership, Maya/A only appears on threads she created, and Rea/C is used as an active joiner rather than a creator, with other fixtures biased toward their named scenarios.
+
+#### Save the new simulator evidence
+
+**User command (verbatim)**
+
+> also save you scrren shot from the simulator !!!
+
+**Assistant response/action summary:** Added fresh simulator screenshot capture and repository storage to the role-fixture and saved-frame verification checklist; resulting images are linked at the next verified checkpoint.
+
+#### Reveal retained conversation after joining
+
+**User command (verbatim)**
+
+> also once you join a group chat you can see the past conversation
+
+**Assistant response/action summary:** Kept full thread history behind contribution membership and added a Rea/C join fixture containing a creator message sent before her accepted photo, so the joined-member test can verify that earlier conversation becomes visible while visitors remain summary-only.
+
+#### Update progress and applicable rule books
+
+**User command (verbatim)**
+
+> updata progress, and updata rule book if applyed
+
+**Assistant response/action summary:** Updated this progress record and the applicable product/design sources: the thread rule now explicitly unlocks retained earlier chat at acceptance, the Visual Guide defines deadline and saved-frame colors, the UI inventory records Random/Following and Mine Following, and the Round One README documents test-only scenario account fixtures.
+
+#### Verify all repository documentation against the newest plan
+
+**User command (verbatim)**
+
+> is all document in repo updated to the newest plan?
+
+**Assistant response/action summary:** Ran a repository-wide Markdown consistency scan, updated the stale root status, account-entry inventory and SwiftUI redesign handoff, and retained intentionally historical briefs and verbatim dialogue with their existing superseded-context labels.
+
+#### Confirm progress storage
+
+**User command (verbatim)**
+
+> progress stored?
+
+**Assistant response/action summary:** Confirmed that progress, the current UI audit and simulator screenshots are stored under the Round One repository documentation paths and included them in the pending verified checkpoint.
+
+### Verified role-fixture checkpoint
+
+| Jun — saved only | Maya — created only | Rea — joined only |
+|---|---|---|
+| ![Jun has no Active threads and a dark saved journal](../progress/screenshots/2026-11-19-jun-saved-only.png) | ![Maya's active threads are created by Maya](../progress/screenshots/2026-11-19-maya-created-only.png) | ![Rea has joined active threads](../progress/screenshots/2026-11-19-rea-joined-only.png) |
+
+The first retained-history capture used a stale build and showed an empty conversation; that failed evidence is preserved as `2026-11-19-retained-history-failed-stale-build.png`. After rebuilding and keeping Rea's fixture active, the focused retry passed:
+
+![Rea can read Eli's message sent before she joined](../progress/screenshots/2026-11-19-rea-retained-history-pass.png)
+
+Rea opens the active `Show me a rainy-day color.` thread at 3/9 and can read Eli's earlier message, “I noticed the color before the rain started.”
+
+#### Completion status check
+
+**User command (verbatim)**
+
+> are you done?
+
+**Assistant response/action summary:** Confirmed the final retained-history retry passed, saved its simulator evidence, updated the progress and audit records, and prepared the verified checkpoint for commit and push.
 
 #### Keep progress documentation current during work
 

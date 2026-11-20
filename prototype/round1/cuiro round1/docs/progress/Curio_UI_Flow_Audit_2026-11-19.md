@@ -40,6 +40,7 @@ Scope: the current local SwiftUI simulator build. This report distinguishes visi
 | Discover Random/Following | Working locally | Random shows open fixtures; B's Following shows only Maya/A. Following data is not persisted. |
 | Settings account menu | Working locally | The top-right gear opens A–J and showed B selected during the audit. These are in-memory identities, not Firebase Auth sessions. |
 | Scenario account roles | Working locally | Simulator verification confirmed all A–J role labels and switching to C updates Mine to `Rea` and `C · Test join invitation`. |
+| Scenario fixture states | Working locally | Jun has no Active membership and has a dark saved journal; Maya's Active threads are creator-only; Rea has joined Active threads and no created threads. |
 | Discover Polaroid layout | Working with placeholders | Shared 1-up, 2×2, and 3×3 collage logic is visible. Fixtures use colors/SF Symbols rather than bundled sample JPGs. |
 | Deadline frame color | Implemented; limited visual audit | Active paper interpolates toward `#502653` near expiry, including compact thumbnails. A timed before/after capture remains to be recorded. |
 | Inbox rows | Partially working | One row per contributed thread shows a 55 pt collage, prompt, latest activity, and relative time. A vertical center line appears because the row `Divider` resolves vertically. |
@@ -49,7 +50,8 @@ Scope: the current local SwiftUI simulator build. This report distinguishes visi
 | Photo selection and crop | Previously verified; not rerun on latest build | Library/camera handoff, square crop, preview, prompt suggestions, and continuous typing passed earlier checks. |
 | Final-submit protection | Previously verified | “Use this photo” opens preview without publishing; the final publish/join button requires a separate tap. It was not rerun after the latest feed-only changes. |
 | Visitor invitation detail | Partially implemented | A nonmember can see summary and Add a photo. Private viewer authorization is not enforced. |
-| Member timeline | Not meeting current direction | The current thread still separates photos from messages and does not yet interleave automatic photo-join entries and chat chronologically; outgoing/incoming bubble alignment remains unfinished. |
+| Retained pre-join conversation | Working locally | Rea opens an active joined thread and can read Eli's message sent before her accepted contribution. |
+| Member timeline presentation | Not meeting current direction | The current thread still separates photos from messages and does not yet interleave automatic photo-join entries and chat chronologically; outgoing/incoming bubble alignment remains unfinished. |
 | Ten-minute archive | Partially working locally | The simulator control expires active fixtures and routes them into Mine, but this is not server time and the latest session did not complete the archive walk. |
 | Personalized journal | Partially implemented | Existing cover logic centers the viewer's photo and leaves empty slots, with member conversation disclosure. A/B comparison was not rerun on the latest build, and Journal still needs the shared Visual Guide styling pass. |
 | Full 9/9 removal | Implemented locally; not latest-session verified | Discover filters `isFull`; concurrency-safe ninth-slot acceptance is not implemented. |

@@ -288,7 +288,7 @@
 **User instruction (verbatim)**
 > add this: for that are closer to deadline(10min) make the color darker, that is the closer it is to the 10 mmin deadline, the more close it is to 502653, the apply to the white frame of the images
 
-**Assistant response summary (English):** Added deadline-sensitive paper-frame coloring that moves from warm white toward `#502653` as expiry approaches, with archived frames remaining light and caption contrast adapting on dark frames.
+**Assistant response summary (English):** Added deadline-sensitive paper-frame coloring that moves from warm white toward `#502653` as expiry approaches; a later direction keeps archived frames at the final dark color.
 
 ### 2026-11-19 — Update progress continuously
 
@@ -310,3 +310,59 @@
 > can you push now?
 
 **Assistant response summary (English):** Retried committing and pushing the latest verified Round One UI and progress documentation to the repository and reported the actual GitHub result.
+
+### 2026-11-19 — Keep saved frames dark purple
+
+**User instruction (verbatim)**
+> saved one should be dark purpr, since it reach the 10 min
+
+**Assistant response summary (English):** Changed expired and saved Polaroid frames and compact thumbnails to stay at `#502653`, with white prompt text for readable contrast.
+
+### 2026-11-19 — Align fixtures with account roles
+
+**User instruction (verbatim)**
+> for exaplem Jun saved jornal, do not have it join any ongoing post, Maya should only have post she create etc...
+
+**Assistant response summary (English):** Reorganized fixtures so Jun/B has saved-only membership, Maya/A only participates as a creator, and Rea/C participates as an active joiner, while preserving stable A–J identities.
+
+### 2026-11-19 — Save fresh simulator screenshots
+
+**User instruction (verbatim)**
+> also save you scrren shot from the simulator !!!
+
+**Assistant response summary (English):** Added repository-backed simulator screenshots to the verification requirements for the reorganized fixtures and dark saved-journal state.
+
+### 2026-11-19 — Show earlier conversation after joining
+
+**User instruction (verbatim)**
+> also once you join a group chat you can see the past conversation
+
+**Assistant response summary (English):** Preserved full message-history access for contributors and added a Rea/C fixture whose creator message predates her contribution, while keeping conversation hidden from nonmembers.
+
+### 2026-11-19 — Update progress and rule books
+
+**User instruction (verbatim)**
+> updata progress, and updata rule book if applyed
+
+**Assistant response summary (English):** Updated the progress document, thread and journal rules, Visual Guide, UI inventory, and Round One test-fixture documentation where the new decisions apply.
+
+### 2026-11-19 — Audit repository documentation currency
+
+**User instruction (verbatim)**
+> is all document in repo updated to the newest plan?
+
+**Assistant response summary (English):** Scanned repository Markdown for stale rules, updated current-facing status, UI inventory and SwiftUI redesign documents, and preserved explicitly superseded historical briefs and verbatim dialogue as history.
+
+### 2026-11-19 — Confirm progress storage
+
+**User instruction (verbatim)**
+> progress stored?
+
+**Assistant response summary (English):** Confirmed the repository paths for the progress dialogue, current UI audit and saved simulator screenshots and included them in the pending checkpoint.
+
+### 2026-11-19 — Confirm completion status
+
+**User instruction (verbatim)**
+> are you done?
+
+**Assistant response summary (English):** Confirmed the focused retained-history retry passed, saved the simulator screenshot, updated the progress and UI audit records, and prepared the verified checkpoint for commit and push.

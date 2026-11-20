@@ -19,6 +19,8 @@ Set the server-side round-one duration to 600 seconds for each newly published t
 
 Seed A–J in the local Auth emulator with `python3 seed_auth.py` (default port 9099). Register their UIDs as active test users in the backend fixture and have B follow A. For every new public thread, put one reference in every other registered test user's in-app inbox, regardless of follows; the creator sees Mine. Include offline accounts so they can retrieve it later. Keep public threads readable to signed-in users, including later registrants. This prototype treats “push” as in-app delivery.
 
+The native in-memory demo labels A–J by scenario to make manual checks predictable: A/Maya creates, B/Jun opens a saved journal without active membership, C/Rea tests joining and retained earlier chat, D/Leo tests member chat, E/Eli tests near-deadline styling, F/Sam tests full-thread behavior, G/Iris tests visitor/empty Inbox, H/Uma tests private followers, I/Nora tests the ninth-slot race and J/Kaia tests invite-link access. These labels are fixture conveniences, not production roles or authorization rules.
+
 Private threads are discoverable through current followers or a valid share link. On publication send inbox references only to current followers. A signed-in holder of a forwarded valid link can redeem it without following. Use an unguessable opaque token, store its digest server-side, and exchange it in a callable for a per-user thread grant. A plain thread ID grants no permission. Never include the token or image bytes in a general feed. Viewing alone leaves chat locked; accepting a photo grants membership. For this test a redeemed link grant persists through archival.
 
 Firebase contract additions (all writes via backend):
