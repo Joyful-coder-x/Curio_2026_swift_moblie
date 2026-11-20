@@ -1,5 +1,7 @@
 # Curio
 
+[Color palette and iOS dimensions](docs/design/Curio_Visual_Guide.md) · [Current Discover preview](prototype/round1/ui/Discover.jpg) · [Page decisions and open questions](prototype/round1/UI_INVENTORY.md) · [AI dialogue](docs/ai-dialogue/Curio_AI_Dialogue.md)
+
 [Start here to build the four-screen prototype](prototype/round1/START_HERE.md) · [View the four screens](prototype/round1/ui/Four_Screens.jpg)
 
 **Round-one test override.** Use a 10-minute deadline, at least ten accounts, public delivery to all other testers and private access through following or a valid invitation link. Each thread still has nine places including its creator. The normal duration is 12 hours. [Test configuration](prototype/round1/README.md#test-configuration-and-distribution)

@@ -256,6 +256,13 @@ The earlier companion-only dialogue and its documentation requests are kept in t
 
 **Assistant response summary (English):** Proposed adaptive grids, cached dominant palettes and deterministic color selection, compared solid tiles with procedural mosaics, and explained how both fit the current discovery and archive rules.
 
+### 2026-11-19 — Browser refresh shortcut
+
+**User instruction (verbatim)**
+> refresh key for apple
+
+**Assistant response summary (English):** Explained that Command-R refreshes a webpage on Mac.
+
 ### 2026-11-19 — Check newly added prototype code
 
 **User instruction (verbatim)**
@@ -323,3 +330,21 @@ The earlier companion-only dialogue and its documentation requests are kept in t
 **User request summary (English):** Populate Discover with a scrollable community feed and clearer author identities, remove the web-style brand header and star, and retain the Inbox design.
 
 **Assistant response summary (English):** Added 24 sample community threads with author bylines, removed the brand header and star, and verified mobile scrolling and navigation through the last card.
+
+### 2026-11-19 — Sync project discussions
+
+**User instruction (verbatim)**
+> 把我们现在的讨论全部放，就是update到 GitHub上
+
+**User request summary (English):** Bring the Curio discussion records on GitHub up to date.
+
+**Assistant response summary (English):** Reviewed the project dialogue chronology, backfilled the refresh shortcut and linked the current decisions and dialogue from the repository homepage.
+
+### 2026-11-19 — Reusable palette and dimensions
+
+**User instruction (verbatim)**
+> 然后根据咱们现在的这个色相，你给我一个就是也加一个，这叫什么，色卡上去。这样我在做后面APP的时候可以使用。然后还有一些 dimension
+
+**User request summary (English):** Add a reusable color swatch card and layout dimensions based on the current app design.
+
+**Assistant response summary (English):** Added a labeled palette image, verified the twelve hex values against the current stylesheet, and documented responsive measurements and initial SwiftUI point sizes.
