@@ -382,3 +382,12 @@ The earlier companion-only dialogue and its documentation requests are kept in t
 **User request summary (English):** Summarize the latest repository changes and current milestone in Chinese.
 
 **Assistant response summary (English):** Compared main at 87bb41f with the previous review and summarized the scenario fixtures, saved-frame styling, documented simulator checks and remaining multi-device acceptance work.
+
+### 2026-11-19 — Week 11 course report
+
+**User instruction (verbatim)**
+> 用这个格式给我写一下这星期的这个 weekly report
+
+**User request summary (English):** Write this week's report in the format of the supplied course wiki.
+
+**Assistant response summary (English):** Drafted a first-person Week 11 report covering the choice of Curio, native simulator progress, remaining limitations, next steps and questions for class.
