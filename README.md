@@ -1,5 +1,7 @@
 # Curio
 
+**Round-one test override.** Use a 10-minute deadline, at least ten accounts, public delivery to all other testers and private access through following or a valid invitation link. Each thread still has nine places including its creator. The normal duration is 12 hours. [Test configuration](prototype/round1/README.md#test-configuration-and-distribution)
+
 An iOS app concept for noticing everyday discoveries through photo invitations, individual photo letters and a shared journal. Swift and SwiftUI are the intended implementation tools.
 
 ## Proposal

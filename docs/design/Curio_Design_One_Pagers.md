@@ -1,5 +1,7 @@
 # Curio · Thread and journal design
 
+**Round-one test override.** Use a 10-minute deadline, at least ten accounts, public delivery to all other testers and private access through following or a valid invitation link. Each thread still has nine places including its creator. The normal duration is 12 hours. [Test configuration](../../prototype/round1/README.md#test-configuration-and-distribution)
+
 Current product decisions, November 19, 2026. Use these rules for new work. Firebase implementation choices below are recommendations.
 
 ## 1. Thread lifecycle

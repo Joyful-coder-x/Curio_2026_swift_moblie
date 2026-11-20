@@ -228,3 +228,12 @@ The earlier companion-only dialogue and its documentation requests are kept in t
 **User request summary (English):** Define a minimal first-round prototype that exercises the workflow, specify the backend data and storage rules, and identify the tests to run.
 
 **Assistant response summary (English):** Added a four-view prototype assignment, draft Firestore and Storage rules, a SQLite reference schema and passing local constraint checks, plus acceptance cases for Firebase and two-client verification.
+
+### 2026-11-19 — Short test duration and multi-account distribution
+
+**User instruction (verbatim)**
+> 为了测试这个需求，把这个十二小时暂时先改成十分钟。然后我想要多个账号，就我可以很多个账号，就是暂定至少能够允许十个左右的账号。然后默认是我只要创建的 threads就推送给所有人，就是 public是给所有人， private是就是通过链接和 follow
+
+**User request summary (English):** Shorten the test duration to ten minutes, support at least ten test accounts, distribute public threads to everyone and allow private threads through links or follows.
+
+**Assistant response summary (English):** Updated the test contract, SQL reference and draft access rules, added a local Auth seed script, and ran SQLite checks for distribution, expiry and private viewing.

@@ -10,8 +10,12 @@ service firebase.storage {
                     && request.time < asset().expiresAt
                     && request.resource.size > 0 && request.resource.size <= 5 * 1024 * 1024
                     && request.resource.contentType == 'image/jpeg';
+      function canReadCommitted(a) {
+        return a.state == 'committed' && (a.visibility == 'public' ||
+          firestore.exists(/databases/(default)/documents/threads/$(a.threadId)/viewers/$(request.auth.uid)));
+      }
       allow get: if request.auth != null && asset().ownerUid == uid
-                 && (asset().state == 'committed'
+                 && (canReadCommitted(asset())
                      || (asset().state == 'pending' && request.auth.uid == uid));
     }
   }

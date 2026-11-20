@@ -3,13 +3,17 @@ service cloud.firestore {
   match /databases/{db}/documents {
     function signedIn() { return request.auth != null; }
     match /threads/{t} {
-      allow read: if signedIn();
-      match /contributions/{uid} { allow read: if signedIn(); }
+      allow read: if signedIn() && (resource.data.visibility == 'public' || exists(/databases/$(db)/documents/threads/$(t)/viewers/$(request.auth.uid)));
+      match /contributions/{uid} {
+        allow read: if signedIn() && (get(/databases/$(db)/documents/threads/$(t)).data.visibility == 'public'
+                    || exists(/databases/$(db)/documents/threads/$(t)/viewers/$(request.auth.uid)));
+      }
       match /messages/{m} {
         allow read: if signedIn() && exists(/databases/$(db)/documents/threads/$(t)/contributions/$(request.auth.uid));
       }
     }
     match /users/{uid}/myThreads/{t} { allow read: if signedIn() && request.auth.uid == uid; }
+    match /users/{uid}/deliveries/{t} { allow read: if signedIn() && request.auth.uid == uid; }
     match /assets/{a} { allow get: if signedIn() && resource.data.ownerUid == request.auth.uid; }
     // All mutations go through authenticated callables using the Admin SDK.
   }
