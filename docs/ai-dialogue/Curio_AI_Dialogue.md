@@ -296,3 +296,12 @@ The earlier companion-only dialogue and its documentation requests are kept in t
 **User request summary (English):** Treat each square photo or collage as one smaller instant print with its prompt inside the wide bottom margin.
 
 **Assistant response summary (English):** Updated the Home and Mine browser mockup to frame each whole collage and its caption together, with more space between cards.
+
+### 2026-11-19 — Inbox group conversations and photo timeline
+
+**User instruction (verbatim)**
+> 现在到 inbox，inbox是这样的，就是借用 WeChat的这个模式。然后每一个 post或者说 thread或者是 whatever，然后它都是一个有点像 WeChat的这个 group message。然后它的 image就是和前面的照片是一样的。然后你点开以后就有点像这个朋友圈一样就是你在 post，post一个 image以后自动会发到这个朋友圈里头。就是说谁谁谁 join the post with一个冒号，然后下面是他新发的照片。然后可以有人去 comment，就是去讨论。然后这个 comments讨论就有点像 message的那个泡泡，就是我就就是对话嘛。然后风格要统一
+
+**User request summary (English):** Give each thread a WeChat-style Inbox conversation with its collage thumbnail, automatic photo-join posts and conversational comment bubbles.
+
+**Assistant response summary (English):** Implemented and browser-tested the Inbox list and chronological member feed with automatic photo entries, left/right message bubbles and a two-screen preview.

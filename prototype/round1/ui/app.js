@@ -147,7 +147,7 @@ function publish() {
       render();
       return;
     }
-    t.photos.push({ u, src: draft.src });
+    t.photos.push({ u, src: draft.src, at: now(), color: draft.color });
     t.lastPhotoAt = now();
     id = t.id;
   } else {
@@ -172,7 +172,7 @@ function publish() {
       q: draft.q.trim(),
       private: draft.private,
       end: now() + 600000,
-      photos: [{ u, src: draft.src }],
+      photos: [{ u, src: draft.src, at: now(), color: draft.color }],
       messages: [],
       grants: [],
       delivered: users.filter(
@@ -188,7 +188,7 @@ function send() {
   let t = chosen(),
     text = document.getElementById("msg").value.trim();
   if (text && member(t) && !expired(t)) {
-    t.messages.push({ u, text });
+    t.messages.push({ u, text, at: now() });
     save();
   }
   render();
@@ -202,6 +202,8 @@ async function pick(file) {
     c.width = bmp.width * scale;
     c.height = bmp.height * scale;
     c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+    const pixel = c.getContext("2d").getImageData(Math.floor(c.width / 2), Math.floor(c.height / 2), 1, 1).data;
+    draft.color = "#" + Array.from(pixel.slice(0, 3), v => v.toString(16).padStart(2, "0")).join("");
     draft.src = c.toDataURL("image/jpeg", 0.72);
     bmp.close();
     render();
@@ -217,6 +219,41 @@ function state(t) {
         " · " +
         Math.ceil((t.end - now()) / 60000) +
         " min left";
+}
+function events(t) {
+  const start = t.end - 600000;
+  const photos = t.photos.map((p, i) => ({
+    ...p, at: p.at ?? start + i, label: i ? "joined the thread with a photo" : "started the thread"
+  }));
+  const messages = t.messages.map((m, i) => ({...m, at: m.at ?? start + photos.length + i}));
+  return [...photos, ...messages].sort((a, b) => a.at - b.at);
+}
+function threadCover(t) {
+  const n = t.photos.length === 1 ? 1 : t.photos.length <= 4 ? 2 : 3;
+  const tones = ["#ca7a77","#ae9258","#c2a050","#cbb878","#7a7d7f","#b8861d","#d29020","#9e7952","#c3a455"];
+  const cells = Array.from({length:n*n}, (_, i) => {
+    if (t.photos[i]) return '<img alt="" src="' + esc(t.photos[i].src) + '">';
+    const sample = t.photos[i % t.photos.length];
+    const index = tones.findIndex((_, j) => sample.src === img(j+1));
+    const tone = sample.color || tones[index] || "#dbc5aa";
+    return '<i style="background:' + (/^#[0-9a-f]{6}$/i.test(tone) ? tone : "#dbc5aa") + '"></i>';
+  });
+  return '<span class="mini-print"><span class="mosaic" style="--cols:'+n+'">'+cells.join("")+'</span></span>';
+}
+function inboxRows(list) {
+  const rows = list.map(t => {
+    const last = member(t) ? events(t).at(-1) : events(t)[0];
+    const preview = member(t) ? name(last.u) + (last.src ? " " + last.label : " · " + last.text) : "Photo invitation from " + name(owner(t));
+    return {t, preview, at:last.at};
+  }).sort((a,b) => b.at - a.at);
+  return rows.map(({t,preview,at}) => `<button class="conversation-row" onclick="openThread('${t.id}')">${threadCover(t)}<span><strong>${esc(t.q)}</strong><small>${esc(preview)}</small></span><time>${new Date(at).toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})}</time></button>`).join("") || "<p>Your inbox is empty.</p>";
+}
+function timeline(t) {
+  return events(t).map(e => {
+    const author = name(e.u);
+    if (e.src) return `<figure class="photo-event"><figcaption><b>${author}</b> ${e.label}:</figcaption><img src="${esc(e.src)}" alt="Photo by ${author}"></figure>`;
+    return `<div class="bubble ${e.u === u ? "mine" : ""}"><small>${author}</small><p>${esc(e.text)}</p></div>`;
+  }).join("");
 }
 function render() {
   let s = "",
@@ -234,18 +271,13 @@ function render() {
             ? member(t) || t.delivered.includes(u)
             : !expired(t) && !full(t)),
     );
-    if (tab === "Inbox")
-      list.sort(
-        (a, b) =>
-          (b.lastPhotoAt || b.end - 600000) - (a.lastPhotoAt || a.end - 600000),
-      );
     s =
-      '<h1>Photo invitations</h1><div class="row">' +
+      '<h1>' + (tab === 'Inbox' ? 'Inbox' : 'Photo invitations') + '</h1><div class="row">' +
       ["Discover", "Inbox", "Mine"]
         .map((x) => button(x, "tab='" + x + "';home()", x === tab ? "on" : ""))
         .join("") +
       "</div>";
-    s +=
+    s += tab === "Inbox" ? inboxRows(list) :
       list
         .map(
           (t) =>
@@ -300,7 +332,7 @@ function render() {
         [1, 2, 3, 4]
           .map(
             (n) =>
-              '<button onclick="draft.src=img(' +
+              '<button onclick="draft.color=null;draft.src=img(' +
               n +
               ');render()"><img alt="Sample ' +
               n +
@@ -360,7 +392,7 @@ function render() {
       t.photos.length +
       "/9 people</span>";
     if (page === "thread") {
-      s +=
+      if (!member(t)) s +=
         '<div class="strip">' +
         t.photos
           .map(
@@ -403,18 +435,7 @@ function render() {
           "chatOpen=!chatOpen;render()",
         );
       if (page === "thread" || chatOpen) {
-        s +=
-          "<h2>Group chat</h2>" +
-          t.messages
-            .map(
-              (m) =>
-                '<p class="chat"><b>' +
-                name(m.u) +
-                "</b> " +
-                esc(m.text) +
-                "</p>",
-            )
-            .join("");
+        s += '<div class="conversation-feed">' + timeline(t) + '</div>';
         if (page === "thread")
           s +=
             '<input id="msg" aria-label="Group message" placeholder="Message the group…">' +
