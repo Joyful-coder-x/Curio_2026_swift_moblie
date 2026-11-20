@@ -1,4 +1,6 @@
 import SwiftUI
+import PhotosUI
+import UIKit
 
 enum PhotoFormMode: Hashable {
     case create
@@ -12,6 +14,11 @@ struct PhotoFormView: View {
     @State private var isPrivate = false
     @State private var selectedSymbol = "camera.macro"
     @State private var selectedColor = "orange"
+    @State private var imageData: Data?
+    @State private var photoItem: PhotosPickerItem?
+    @State private var isLoadingPhoto = false
+    @State private var photoError: String?
+    @State private var showsCamera = false
     @State private var isConfirmed = false
 
     private let choices = [
@@ -25,10 +32,20 @@ struct PhotoFormView: View {
                 Text(isConfirmed ? "Ready to send?" : "Choose your photo")
                     .font(.largeTitle.bold())
                 PhotoTile(
-                    photo: CurioPhoto(id: UUID(), userID: store.selectedUserID, symbol: selectedSymbol, colorName: selectedColor),
+                    photo: CurioPhoto(
+                        id: UUID(),
+                        userID: store.selectedUserID,
+                        symbol: selectedSymbol,
+                        colorName: selectedColor,
+                        imageData: imageData
+                    ),
                     name: store.selectedUser.name
                 )
                 .frame(height: 310)
+                if let photoError {
+                    Label(photoError, systemImage: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.red)
+                }
                 if isConfirmed {
                     ConfirmedPhotoForm(
                         store: store,
@@ -39,19 +56,26 @@ struct PhotoFormView: View {
                         onSubmit: submit
                     )
                 } else {
-                    Text("Choose a simulator sample")
+                    PhotoSourceButtons(
+                        photoItem: $photoItem,
+                        showsCamera: $showsCamera,
+                        isLoading: isLoadingPhoto
+                    )
+                    Text("Or choose a simulator sample")
                         .font(.headline)
                     HStack {
                         ForEach(choices, id: \.0) { symbol, color in
                             Button {
+                                imageData = nil
                                 selectedSymbol = symbol
                                 selectedColor = color
+                                photoError = nil
                             } label: {
                                 Image(systemName: symbol)
                                     .font(.title2)
                                     .frame(maxWidth: .infinity)
                                     .padding()
-                                    .background(Color.curio(color).opacity(selectedSymbol == symbol ? 0.8 : 0.18), in: RoundedRectangle(cornerRadius: 14))
+                                    .background(Color.curio(color).opacity(selectedSymbol == symbol && imageData == nil ? 0.8 : 0.18), in: RoundedRectangle(cornerRadius: 14))
                             }
                             .buttonStyle(.plain)
                             .accessibilityLabel("Choose \(color) sample")
@@ -59,6 +83,7 @@ struct PhotoFormView: View {
                     }
                     Button("Use this photo") { isConfirmed = true }
                         .buttonStyle(.borderedProminent)
+                        .disabled(isLoadingPhoto)
                         .frame(maxWidth: .infinity)
                 }
             }
@@ -66,6 +91,16 @@ struct PhotoFormView: View {
         }
         .navigationTitle(modeTitle)
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showsCamera) {
+            CameraPicker { data in
+                imageData = data
+                selectedColor = "gray"
+                photoError = nil
+            }
+        }
+        .onChange(of: photoItem) {
+            loadSelectedPhoto()
+        }
     }
 
     private var modeTitle: String {
@@ -75,12 +110,42 @@ struct PhotoFormView: View {
         }
     }
 
+    private func loadSelectedPhoto() {
+        guard let photoItem else { return }
+        isLoadingPhoto = true
+        photoError = nil
+        Task {
+            do {
+                guard let loadedData = try await photoItem.loadTransferable(type: Data.self),
+                      UIImage(data: loadedData) != nil else {
+                    throw PhotoSelectionError.invalidImage
+                }
+                imageData = loadedData
+                selectedColor = "gray"
+            } catch {
+                photoError = "The photo could not be loaded. Try another image."
+            }
+            isLoadingPhoto = false
+        }
+    }
+
     private func submit() {
         switch mode {
         case .create:
-            store.publish(prompt: prompt, isPrivate: isPrivate, symbol: selectedSymbol, colorName: selectedColor)
+            store.publish(
+                prompt: prompt,
+                isPrivate: isPrivate,
+                symbol: selectedSymbol,
+                colorName: selectedColor,
+                imageData: imageData
+            )
         case .join(let threadID):
-            store.join(threadID: threadID, symbol: selectedSymbol, colorName: selectedColor)
+            store.join(
+                threadID: threadID,
+                symbol: selectedSymbol,
+                colorName: selectedColor,
+                imageData: imageData
+            )
         }
     }
 }

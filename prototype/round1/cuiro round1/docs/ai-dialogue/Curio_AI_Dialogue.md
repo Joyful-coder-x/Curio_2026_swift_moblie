@@ -68,3 +68,17 @@
 > now?
 
 **Assistant response summary (English):** Confirmed work was starting immediately and proceeded with repository inspection and implementation.
+
+### 2026-11-19 — Reuse course photo and Firebase examples
+
+**User instruction (verbatim)**
+> https://github.com/Joyful-coder-x/molab-2026-ima-joyce.git  https://github.com/molab-itp/content-2026-ima.git  look in this repo  and use code from this as a emxaple for photo taking, firebase set up, button UI, storage etc
+
+**Assistant response summary (English):** Reviewed the current student and course repositories plus their linked MoGallery and Instafilter examples, then adapted their PhotosPicker, camera, native button, model separation, and Firebase Storage setup patterns to Curio while retaining Curio's stricter authenticated-storage contract.
+
+### 2026-11-19 — Keep Inbox limited to contributors
+
+**User instruction (verbatim)**
+> inbox should be empty for people thathave not yet contribute to the threat
+
+**Assistant response summary (English):** Changed Inbox filtering so only contributors see a thread there; non-contributors continue to find eligible invitations in Discover.

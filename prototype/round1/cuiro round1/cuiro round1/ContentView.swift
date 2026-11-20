@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct ContentView: View {
     @State private var store = CurioStore()
@@ -192,9 +193,15 @@ struct PhotoTile: View {
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
-            Image(systemName: photo.symbol)
-                .font(.system(size: 54, weight: .medium))
-                .foregroundStyle(.white)
+            if let imageData = photo.imageData, let image = UIImage(data: imageData) {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+            } else {
+                Image(systemName: photo.symbol)
+                    .font(.system(size: 54, weight: .medium))
+                    .foregroundStyle(.white)
+            }
             Text(name)
                 .font(.caption.bold())
                 .foregroundStyle(.white)

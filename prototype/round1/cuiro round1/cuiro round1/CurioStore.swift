@@ -12,6 +12,15 @@ struct CurioPhoto: Identifiable, Hashable {
     let userID: String
     let symbol: String
     let colorName: String
+    let imageData: Data?
+
+    init(id: UUID, userID: String, symbol: String, colorName: String, imageData: Data? = nil) {
+        self.id = id
+        self.userID = userID
+        self.symbol = symbol
+        self.colorName = colorName
+        self.imageData = imageData
+    }
 }
 
 struct CurioMessage: Identifiable, Hashable {
@@ -80,9 +89,9 @@ final class CurioStore {
         case .discover:
             return threads.filter { !$0.isExpired && !$0.isFull }
         case .inbox:
-            return threads.filter {
-                $0.deliveredTo.contains(selectedUserID) || isMember(of: $0)
-            }
+            // Inbox is contributor activity, not invitation delivery. People who have
+            // only received or viewed a thread continue to find it in Discover.
+            return threads.filter { isMember(of: $0) }
         case .mine:
             return threads.filter { isMember(of: $0) }
         }
@@ -100,7 +109,7 @@ final class CurioStore {
         thread.photos.contains { $0.userID == selectedUserID }
     }
 
-    func publish(prompt: String, isPrivate: Bool, symbol: String, colorName: String) {
+    func publish(prompt: String, isPrivate: Bool, symbol: String, colorName: String, imageData: Data?) {
         let id = String(UUID().uuidString.prefix(8))
         let recipients = Set(Self.users.map(\.id).filter { $0 != selectedUserID })
         let thread = CurioThread(
@@ -109,7 +118,7 @@ final class CurioStore {
             prompt: prompt.trimmingCharacters(in: .whitespacesAndNewlines),
             isPrivate: isPrivate,
             expiresAt: Date().addingTimeInterval(600),
-            photos: [CurioPhoto(id: UUID(), userID: selectedUserID, symbol: symbol, colorName: colorName)],
+            photos: [CurioPhoto(id: UUID(), userID: selectedUserID, symbol: symbol, colorName: colorName, imageData: imageData)],
             messages: [],
             deliveredTo: isPrivate ? [] : recipients
         )
@@ -117,7 +126,7 @@ final class CurioStore {
         path = [.thread(id)]
     }
 
-    func join(threadID: String, symbol: String, colorName: String) {
+    func join(threadID: String, symbol: String, colorName: String, imageData: Data?) {
         guard let index = threads.firstIndex(where: { $0.id == threadID }),
               !threads[index].isExpired,
               !threads[index].isFull,
@@ -126,7 +135,7 @@ final class CurioStore {
             return
         }
         threads[index].photos.append(
-            CurioPhoto(id: UUID(), userID: selectedUserID, symbol: symbol, colorName: colorName)
+            CurioPhoto(id: UUID(), userID: selectedUserID, symbol: symbol, colorName: colorName, imageData: imageData)
         )
         path = [.thread(threadID)]
     }
