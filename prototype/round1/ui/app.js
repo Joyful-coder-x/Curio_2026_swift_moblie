@@ -11,7 +11,21 @@ const users = "ABCDEFGHIJ".split(""),
     "Noa",
     "Kai",
   ];
-const name = (u) => names[users.indexOf(u)],
+const community = [
+  ["Nora", "What’s blooming on your block?", 4], ["Eli", "Show me a rainy-day color.", 3],
+  ["Kaia", "Where did the sunlight land?", 6], ["Sol", "What’s in your fruit bowl?", 2],
+  ["Wren", "A window worth stopping for?", 8], ["Max", "Spot a yellow ride.", 5],
+  ["Alma", "What did you bring home?", 7], ["Theo", "Find a flower facing the sun.", 9],
+  ["Mei", "A quiet corner on your route?", 1], ["Lou", "What matches your umbrella?", 3],
+  ["Ida", "A little detail on a doorstep?", 6], ["Noel", "Show me the morning market.", 2],
+  ["Yuki", "A petal the color of honey?", 4], ["Ezra", "What catches your eye outside?", 5],
+  ["Lena", "Where would you park your bike?", 1], ["Jules", "A snack for the walk home?", 7],
+  ["Milo", "Whose window reflects the sky?", 8], ["Nia", "Which flower would you sketch?", 9],
+  ["Finn", "What brightens a gray afternoon?", 3], ["Pia", "Something ripe in your kitchen?", 2],
+  ["Otto", "Find a door with a story.", 6], ["Remy", "What makes you slow down?", 4],
+  ["Tess", "A splash of yellow in traffic?", 5], ["Ari", "Something growing near home?", 9],
+];
+const name = (u) => names[users.indexOf(u)] ?? u,
   img = (n) => "assets/" + n + ".jpg",
   esc = (s) =>
     String(s).replace(
@@ -62,11 +76,23 @@ function seed() {
     ],
   };
 }
+function seedCommunity(db, time) {
+  const count = community.length;
+  const threads = community.map(([author, q, image], i) => {
+    const photos = Array.from({length: [1, 3, 5, 2, 4, 7][i % 6]}, (_, j) => ({
+      u: community[(i + j) % count][0], src: img(1 + (image + j - 1) % 9)
+    }));
+    return {id: "WALK-" + time + "-" + i, token: crypto.randomUUID(), private: false,
+      q, end: time + 600000 - i * 1000, photos, messages: [], grants: [], delivered: [...users]};
+  });
+  db.threads.push(...threads);
+}
 let db;
 try {
   db = JSON.parse(localStorage.getItem(key));
 } catch {}
 db = db || seed();
+if (!db.threads.some(t => t.id.startsWith("WALK-") && t.end > now())) seedCommunity(db, now());
 let u = users.includes(sessionStorage.curioUser)
     ? sessionStorage.curioUser
     : "A",
@@ -253,7 +279,9 @@ function collection(threads) {
   if (!threads.length) return "<small>No threads here yet.</small>";
   return '<div class="collection">' + threads.map(t => {
     const meta = tab === "Mine" ? (owner(t) === u ? "Created" : "Joined") : name(owner(t));
-    return `<button class="print-card" onclick="openThread('${t.id}')">${threadCover(t, true)}<small>${meta} · ${t.photos.length}/9 · ${state(t)}</small></button>`;
+    const author = name(owner(t));
+    const byline = tab === "Discover" ? `<span class="byline"><span class="initial" aria-hidden="true">${esc(author[0])}</span>${esc(author)}</span>` : "";
+    return `<button class="print-card" onclick="openThread('${t.id}')">${threadCover(t, true)}${byline}<small>${tab === "Mine" ? meta + " · " : ""} ${t.photos.length}/9 · ${state(t)}</small></button>`;
   }).join("") + '</div>';
 }
 function mineView(list) {
@@ -436,7 +464,11 @@ function render() {
       button("Copy link", "copyLink()") +
       "</details>";
   }
-  document.getElementById("page").innerHTML =
+  const panel = document.getElementById("page");
+  const route = [page, tab, id, u].join("/");
+  if (panel.dataset.route !== route) panel.scrollTop = 0;
+  panel.dataset.route = route;
+  panel.innerHTML =
     s + '<p id="notice" role="status">' + esc(notice) + "</p>";
   document.getElementById("nav").innerHTML =
     ["Discover","Inbox","Mine"].map(x => button(x === "Discover" ? "Home" : x, "tab='"+x+"';home()",page === "home" && tab === x ? "selected-tab" : "")).join("") + button("+ New invitation", "compose()");
@@ -468,6 +500,7 @@ advance.onclick = () => {
 };
 reset.onclick = () => {
   db = seed();
+  seedCommunity(db, now());
   save();
   tab = "Discover";
   home();

@@ -250,3 +250,10 @@ footer button {font-size:13px}
 .profile-head {background:var(--plum);color:var(--paper);padding:14px 18px;margin-bottom:12px}
 .profile-head small {color:var(--paper)}
 .empty-slot {background:#e9e4dc}
+
+main {height:min(850px,100dvh);display:flex;flex-direction:column}
+#page {min-height:0;flex:1;overflow-y:auto;overscroll-behavior:contain}
+footer {position:static;flex-shrink:0}
+.byline {display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;margin:7px 0 2px}
+.initial {display:grid;place-items:center;border-radius:50%;width:19px;height:19px;background:#e3d3cb;color:#503a38;font:italic 13px Georgia,serif}
+#page>h1:first-child {font-size:26px;margin:4px 0 12px}

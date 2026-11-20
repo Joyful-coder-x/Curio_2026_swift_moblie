@@ -2,6 +2,8 @@
 
 [Current combined preview](ui/Unified_UI.jpg) · [Run the browser prototype](START_HERE.md#try-the-reference-in-five-minutes) · [Test rules and Firebase contract](README.md)
 
+[Updated mobile Discover preview](ui/Discover.jpg) · The current demo adds 24 public community samples, author bylines and a fixed bottom navigation bar.
+
 ## Shared presentation
 
 Use a warm gray paper surface (#F3F0E9), warm white prints (#FFFCF5), brown ink (#49392F) and plum (#59434D). Serif italic captions sit in the lower margin of each print. Use system sans for actions, names, timestamps and counts. The visual unit is one thread: one frame around a square collage and its prompt. Keep metadata outside the frame. On Inbox rows shrink the print, moving the prompt beside it for legibility. Inside the timeline a posted image represents one actual contribution.

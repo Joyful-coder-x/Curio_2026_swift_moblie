@@ -314,3 +314,12 @@ The earlier companion-only dialogue and its documentation requests are kept in t
 **User request summary (English):** Unify the new Inbox with the previous design, list the agreed interface configuration, and identify pages that still need discussion.
 
 **Assistant response summary (English):** Integrated shared print covers and navigation in the browser demo, captured four surfaces, and catalogued agreed behavior, incomplete layouts and unplanned screens.
+
+### 2026-11-19 — Populated mobile Discover feed
+
+**User instruction (verbatim)**
+> 来几个点要改，首先 discover应该有很多，就是discover应该是满的，就是可以一直往下scroll的，因为理论上来说是所有在使用这个APP的人都有可能拿得到。然后 inbox没问题那个 messages那个就没问题。然后这个 homepage可以参考这个小红书的多给一些，就比如说像这个作用名啊。然后然后像 homepage就不需要那个上面那个cur，就是那个header了，因为这是一个APP，你现在感觉设计的越来越像网站了。然后把那个 QR后面那个绿色的星星给我去了，太丑了
+
+**User request summary (English):** Populate Discover with a scrollable community feed and clearer author identities, remove the web-style brand header and star, and retain the Inbox design.
+
+**Assistant response summary (English):** Added 24 sample community threads with author bylines, removed the brand header and star, and verified mobile scrolling and navigation through the last card.
