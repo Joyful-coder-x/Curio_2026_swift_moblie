@@ -210,3 +210,12 @@ The earlier companion-only dialogue and its documentation requests are kept in t
 **User request summary (English):** Group the outstanding decisions into those that could change the data architecture and those that can be refined before launch.
 
 **Assistant response summary (English):** Grouped the decisions by the cost of changing stored data, permissions and user promises, and documented the prerequisites that let the remaining details wait.
+
+### 2026-11-19 — Nine-person journal, retained chat and permanent contributions
+
+**User instruction (verbatim)**
+> 一，我同意你的建议。不是，是医生发起照片，然后他也算，就等于说算上你自己还有其他十一个人，一共是十二个人。那个这样吧，改成九个吧，就是因为我想最后的照片是一个九宫格，就是你最后十二个封上的时候是一个九宫格，加上你一开始上面的 prompt 和再往下有 contributor，然后 link to chat，你也可以看见 Chat 当时就是，如果你有 conversation，可以留存这个 conversation。然后三是这样的。 关注和阻止关注是一回事儿，群成员和曾经贡献过，这些都是临时的。就是在这个 thread 开启的这十二个小时内，这个群是 open 的，就是谁 contribute，谁就可以进来说话。然后十个小时，十二个小时以后结束。你可以选，就是在这个结束以后，它不是会生成一个有点像 journal 一样的东西吗？这个 journal 里头会有这 contribute 的这些个人。啊，不是十二个，是十九个，忘了。就是九个人，算上你自己一共九个人。然后你可以选择你要不要 follow，就是要不要关注。就关注是长期的，群贡献是短期的。这两个是完全两个关系，就是关注管的是 what's suggested，Q。然后群成员是你已经加入一个以后，就是能说话。然后这个 chat 暂时先保留，就是默认保留，就是保留在这个封存的 journal 底下，是一个就是类似。 就是你可以打开，就是你可以打开一个封存的 journal，里头有这九张照片，是它的 cover page。然后你可以看见它的 contributor，然后你也可以点开它的 chat box，就是在这十二个小时内你和这些人聊过什么。然后每人在打开自己的，就是打开一个日记的时候，你 contributor 那张照片是在正中间的。然后照片是不可撤回、不可更改的。
+
+**User request summary (English):** Set a nine-person cap including the creator, keep chat for the 12-hour group and its archive, separate following from contributing, and center each viewer’s immutable photo on their journal cover.
+
+**Assistant response summary (English):** Updated the design sheets, README and backend brief pointers with the nine-person lifecycle, contributor-specific cover, follow actions, retained chat and immutable photos.

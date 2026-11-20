@@ -1,5 +1,7 @@
 # Curio — Firebase backend feasibility assignment
 
+> **Earlier prototype brief.** For current implementation and acceptance criteria use the [thread and journal design](../design/Curio_Design_One_Pagers.md). It supersedes this prototype’s private-audience, reply-capacity, closure, membership and archive assumptions. Count the creator as 1/9, close joins at 9/9, archive at 12 hours, retain member-only chat and prevent author changes to published photos.
+
 Date: November 19, 2026. Status: proposed implementation contract, not implemented code or final product rules.
 
 For the current publishing and follow test, use the [publish and follow assignment](Publish_and_Follow_Test_Request.md). Its public and follower-based access rules supersede the private-test allowlist below for open invitations.

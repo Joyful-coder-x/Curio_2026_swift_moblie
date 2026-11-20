@@ -1,5 +1,7 @@
 # Developer request · Publish and follow a Curio photo invitation
 
+> **Earlier prototype brief.** For current implementation and acceptance criteria use the [thread and journal design](../design/Curio_Design_One_Pagers.md). It supersedes this prototype’s private-audience, reply-capacity, closure, membership and archive assumptions. Count the creator as 1/9, close joins at 9/9, archive at 12 hours, retain member-only chat and prevent author changes to published photos.
+
 Curio is an iOS app where someone posts a photo and asks others to respond with one of their own. Please deliver a small SwiftUI test client and Firebase backend for two features: publishing an invitation and using a follower relationship to discover and open it. I need to be able to run both flows with separate accounts before I build the final UI.
 
 ## Feature 1 · Capture and publish

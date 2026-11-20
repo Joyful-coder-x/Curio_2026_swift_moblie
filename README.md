@@ -11,17 +11,17 @@ The original documents retain the previous working name Match Me. The current na
 
 ## Planned features
 
-These are proposed features, not completed functionality. The first test focuses on one invitation → reply → journal exchange. MVP work proceeds only if Curio is selected after the comparative tests.
+These are proposed features, not completed functionality. The first test focuses on one invitation → reply → journal exchange. Curio is the selected project. See the [current thread and journal rules](docs/design/Curio_Design_One_Pagers.md).
 
 | Feature | What it does | Scope |
 |---|---|---|
 | Daily photo invitation | Create one invitation per day with a starting photo and a short question. | MVP; included in first flow test |
-| Audience selection | Choose public mixed, random public, or private friends. Actual distribution and permissions require implementation; they may be simulated in the first test. | MVP interface; delivery approach to confirm |
+| Audience selection | Public photo threads; following affects suggestions. Group chat is limited to the creator and contributors. | MVP interface; delivery approach to confirm |
 | Invitation detail | Show the question, creator, open/closed state and remaining reply spaces. | MVP; included in first flow test |
 | Photo reply | Submit a photo with an optional short caption; whether captions are required remains an open decision. | MVP; included in first flow test |
-| Reply capacity and closure | Accept up to 12 completed replies and close when full. The deadline for unfilled invitations remains undecided. | MVP |
+| Reply capacity and closure | Count the creator plus up to eight others. At nine photos stop joins and suggestions; at 12 hours archive the thread and stop chat writes. | MVP |
 | Incoming photo letters | Open individual responses and distinguish new from read letters. Live delivery requires a working backend; sample delivery may be used for testing. | MVP; included in first flow test |
-| Shared journal | Combine the invitation and accepted replies into an entry kept by the creator and contributors. Opening-photo placement remains undecided. | MVP; included in first flow test |
+| Shared journal | Show the prompt above a 3×3 cover, center the viewer’s own contribution, and link to contributors and the retained member-only chat. Published photos are immutable. | MVP; included in first flow test |
 | Personal history | Find entries separately as created or joined. | MVP |
 | Clear feedback states | Handle empty entries, full/closed invitations, unavailable photos and failed submissions. | MVP |
 | Real multi-user exchange | Synchronize photos, replies, capacity and access across devices. | Technical feasibility decision; not yet implemented |
