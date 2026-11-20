@@ -98,3 +98,71 @@
 > I should not be able to see this here, G is not in this threat the ibox should be empty 
 
 **Assistant response summary (English):** Corrected the saved-journal fixture so G · Iris is not a contributor and verified that her contributor-only Inbox shows the empty state.
+
+### 2026-11-19 — Add mandatory square cropping
+
+**User instruction (verbatim)**
+> [Attached image: Screenshot 2026-11-19 at 9.25.58 PM.png]
+>
+> add a croping page, that is after the user take image/choose image, allow user to crop the page to squarre, (we onely use square) 
+
+**Assistant response summary (English):** Added a dedicated square-cropping page after camera or library selection with pinch-to-zoom, drag positioning, JPEG normalization, and a constrained 1200×1200 result, and fixed photo-preview overflow.
+
+### 2026-11-19 — Turn Inbox into a member activity feed
+
+**User instruction (verbatim)**
+> inbox seems to not have notification? baseic when a photo added to a threat the use is apart of, it should send mail to inbox as xxx respond with their image... or xxx say"..." etc, the inage here should be a small box on the left of the mesage kind like the profile picture in gmail
+
+**Assistant response summary (English):** Reworked Inbox into a contributor-only activity feed with photo-response and chat-message rows, a small square image/avatar on the left, and navigation back to the related thread or journal.
+
+### 2026-11-19 — Show the photo grid on chat notifications
+
+**User instruction (verbatim)**
+> if some one is commenting in the chat the notofication shoud come with all the photo the have so far in a 9 pohto grid with empty space
+
+**Assistant response summary (English):** Changed chat-notification thumbnails from an avatar to a miniature 3×3 thread-photo grid that preserves empty slots up to nine photos.
+
+### 2026-11-19 — Update and publish the AI dialogue
+
+**User instruction (verbatim)**
+> Updata the UI dialoge with our cnversation so farhttps://github.com/Joyful-coder-x/Curio_2026_swift_moblie.git
+
+**Assistant response summary (English):** Updated the Curio AI dialogue through this instruction, committed it with the pending crop and Inbox activity work, and attempted to push the repository while reporting the actual remote result.
+
+### 2026-11-19 — Redesign the photo-selection screen
+
+**User instruction (verbatim)**
+> [Attached image: Screenshot 2026-11-19 at 9.38.44 PM.png]
+>
+> redo the UI here it's wired
+
+**Assistant response summary (English):** Redesigned the photo-selection screen with a bounded square preview, separated source controls, compact sample choices, and a full-width confirmation action to eliminate the stretched and overlapping layout.
+
+### 2026-11-19 — Fix one-character prompt entry
+
+**User instruction (verbatim)**
+> [Attached image: Screenshot 2026-11-19 at 9.39.37 PM.png]
+>
+> I can only type one letter for the promt? 
+
+**Assistant response summary (English):** Stabilized the draft photo identity and prompt focus so the creation prompt accepts continuous multi-character input up to its 140-character limit.
+
+### 2026-11-19 — Add prompt suggestion buttons
+
+**User instruction (verbatim)**
+> also add suggetion promt :
+> match my photo!
+> Find this color!
+> I want to see...
+> as a botton that acn be click under the promt for creating photo, and when it's clicked, the sentcnce are inserted into the promt
+
+**Assistant response summary (English):** Added three suggestion buttons under the creation prompt that insert the selected sentence into the editable prompt field.
+
+### 2026-11-19 — Repair overflowing Home photo cards
+
+**User instruction (verbatim)**
+> [Attached image: Screenshot 2026-11-19 at 9.42.57 PM.png]
+>
+> UI...
+
+**Assistant response summary (English):** Reworked the shared photo tile to obey each parent view's proposed size, preventing real photos from escaping Home cards or covering navigation, labels, and neighboring content.

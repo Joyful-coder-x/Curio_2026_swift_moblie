@@ -13,13 +13,22 @@ struct CurioPhoto: Identifiable, Hashable {
     let symbol: String
     let colorName: String
     let imageData: Data?
+    let acceptedAt: Date
 
-    init(id: UUID, userID: String, symbol: String, colorName: String, imageData: Data? = nil) {
+    init(
+        id: UUID,
+        userID: String,
+        symbol: String,
+        colorName: String,
+        imageData: Data? = nil,
+        acceptedAt: Date = Date()
+    ) {
         self.id = id
         self.userID = userID
         self.symbol = symbol
         self.colorName = colorName
         self.imageData = imageData
+        self.acceptedAt = acceptedAt
     }
 }
 
@@ -42,6 +51,19 @@ struct CurioThread: Identifiable, Hashable {
 
     var isExpired: Bool { Date() >= expiresAt }
     var isFull: Bool { photos.count >= 9 }
+}
+
+struct InboxActivity: Identifiable, Hashable {
+    enum Kind: Hashable {
+        case photo(CurioPhoto)
+        case message(CurioMessage)
+    }
+
+    let id: String
+    let threadID: String
+    let actorID: String
+    let occurredAt: Date
+    let kind: Kind
 }
 
 enum CurioRoute: Hashable {
@@ -95,6 +117,35 @@ final class CurioStore {
         case .mine:
             return threads.filter { isMember(of: $0) }
         }
+    }
+
+    func inboxActivities() -> [InboxActivity] {
+        var activities: [InboxActivity] = []
+        for thread in threads where isMember(of: thread) {
+            for photo in thread.photos.dropFirst() where photo.userID != selectedUserID {
+                activities.append(
+                    InboxActivity(
+                        id: "photo-\(thread.id)-\(photo.id)",
+                        threadID: thread.id,
+                        actorID: photo.userID,
+                        occurredAt: photo.acceptedAt,
+                        kind: .photo(photo)
+                    )
+                )
+            }
+            for message in thread.messages where message.userID != selectedUserID {
+                activities.append(
+                    InboxActivity(
+                        id: "message-\(thread.id)-\(message.id)",
+                        threadID: thread.id,
+                        actorID: message.userID,
+                        occurredAt: message.sentAt,
+                        kind: .message(message)
+                    )
+                )
+            }
+        }
+        return activities.sorted { $0.occurredAt > $1.occurredAt }
     }
 
     func thread(id: String) -> CurioThread? {

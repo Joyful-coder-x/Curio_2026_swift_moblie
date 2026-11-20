@@ -11,10 +11,13 @@ struct PhotoFormView: View {
     let store: CurioStore
     let mode: PhotoFormMode
     @State private var prompt = ""
+    @State private var draftPhotoID = UUID()
     @State private var isPrivate = false
     @State private var selectedSymbol = "camera.macro"
     @State private var selectedColor = "orange"
     @State private var imageData: Data?
+    @State private var cropSourceImage: UIImage?
+    @State private var showsCropper = false
     @State private var photoItem: PhotosPickerItem?
     @State private var isLoadingPhoto = false
     @State private var photoError: String?
@@ -28,12 +31,12 @@ struct PhotoFormView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 22) {
+            VStack(alignment: .leading, spacing: 18) {
                 Text(isConfirmed ? "Ready to send?" : "Choose your photo")
-                    .font(.largeTitle.bold())
+                    .font(.title.bold())
                 PhotoTile(
                     photo: CurioPhoto(
-                        id: UUID(),
+                        id: draftPhotoID,
                         userID: store.selectedUserID,
                         symbol: selectedSymbol,
                         colorName: selectedColor,
@@ -41,7 +44,9 @@ struct PhotoFormView: View {
                     ),
                     name: store.selectedUser.name
                 )
-                .frame(height: 310)
+                .aspectRatio(1, contentMode: .fit)
+                .frame(maxWidth: 420)
+                .frame(maxWidth: .infinity)
                 if let photoError {
                     Label(photoError, systemImage: "exclamationmark.triangle.fill")
                         .foregroundStyle(.red)
@@ -73,18 +78,22 @@ struct PhotoFormView: View {
                             } label: {
                                 Image(systemName: symbol)
                                     .font(.title2)
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
+                                    .frame(maxWidth: .infinity, minHeight: 64)
                                     .background(Color.curio(color).opacity(selectedSymbol == symbol && imageData == nil ? 0.8 : 0.18), in: RoundedRectangle(cornerRadius: 14))
                             }
                             .buttonStyle(.plain)
                             .accessibilityLabel("Choose \(color) sample")
                         }
                     }
-                    Button("Use this photo") { isConfirmed = true }
-                        .buttonStyle(.borderedProminent)
-                        .disabled(isLoadingPhoto)
-                        .frame(maxWidth: .infinity)
+                    Button {
+                        isConfirmed = true
+                    } label: {
+                        Text("Use this photo")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.large)
+                    .disabled(isLoadingPhoto)
                 }
             }
             .padding()
@@ -93,9 +102,25 @@ struct PhotoFormView: View {
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showsCamera) {
             CameraPicker { data in
-                imageData = data
-                selectedColor = "gray"
-                photoError = nil
+                beginCropping(data)
+            }
+        }
+        .fullScreenCover(isPresented: $showsCropper) {
+            if let cropSourceImage {
+                SquareCropView(
+                    image: cropSourceImage,
+                    onCancel: {
+                        showsCropper = false
+                        self.cropSourceImage = nil
+                    },
+                    onUse: { croppedData in
+                        imageData = croppedData
+                        selectedColor = "gray"
+                        photoError = nil
+                        showsCropper = false
+                        self.cropSourceImage = nil
+                    }
+                )
             }
         }
         .onChange(of: photoItem) {
@@ -120,13 +145,21 @@ struct PhotoFormView: View {
                       UIImage(data: loadedData) != nil else {
                     throw PhotoSelectionError.invalidImage
                 }
-                imageData = loadedData
-                selectedColor = "gray"
+                beginCropping(loadedData)
             } catch {
                 photoError = "The photo could not be loaded. Try another image."
             }
             isLoadingPhoto = false
         }
+    }
+
+    private func beginCropping(_ data: Data) {
+        guard let image = UIImage(data: data) else {
+            photoError = "The selected file is not a supported image."
+            return
+        }
+        cropSourceImage = image
+        showsCropper = true
     }
 
     private func submit() {
@@ -150,6 +183,36 @@ struct PhotoFormView: View {
     }
 }
 
+struct PromptSuggestionButtons: View {
+    @Binding var prompt: String
+
+    private let suggestions = [
+        "Match my photo!",
+        "Find this color!",
+        "I want to see…"
+    ]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Try a prompt")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+            ScrollView(.horizontal) {
+                HStack(spacing: 8) {
+                    ForEach(suggestions, id: \.self) { suggestion in
+                        Button(suggestion) {
+                            prompt = suggestion
+                        }
+                        .buttonStyle(.bordered)
+                        .controlSize(.small)
+                    }
+                }
+            }
+            .scrollIndicators(.hidden)
+        }
+    }
+}
+
 struct ConfirmedPhotoForm: View {
     let store: CurioStore
     let mode: PhotoFormMode
@@ -157,6 +220,7 @@ struct ConfirmedPhotoForm: View {
     @Binding var isPrivate: Bool
     let onRetake: () -> Void
     let onSubmit: () -> Void
+    @FocusState private var promptIsFocused: Bool
 
     var body: some View {
         Button("Retake", action: onRetake)
@@ -165,6 +229,18 @@ struct ConfirmedPhotoForm: View {
         case .create:
             TextField("Find something yellow.", text: $prompt, axis: .vertical)
                 .textFieldStyle(.roundedBorder)
+                .focused($promptIsFocused)
+                .onAppear { promptIsFocused = true }
+                .onChange(of: prompt) {
+                    if prompt.count > 140 {
+                        prompt = String(prompt.prefix(140))
+                    }
+                }
+            Text("\(prompt.count)/140")
+                .font(.caption.monospacedDigit())
+                .foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+            PromptSuggestionButtons(prompt: $prompt)
             Picker("Audience", selection: $isPrivate) {
                 Text("Public").tag(false)
                 Text("Private").tag(true)

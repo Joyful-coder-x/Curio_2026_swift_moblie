@@ -36,15 +36,10 @@ struct HomeView: View {
                 if let notice = store.notice {
                     NoticeBanner(text: notice)
                 }
-                ForEach(store.homeThreads()) { thread in
-                    ThreadCard(store: store, thread: thread)
-                }
-                if store.homeThreads().isEmpty {
-                    ContentUnavailableView(
-                        "Nothing here yet",
-                        systemImage: "photo.on.rectangle.angled",
-                        description: Text("Create an invitation or switch test accounts.")
-                    )
+                if store.selectedSection == .inbox {
+                    InboxActivityList(store: store)
+                } else {
+                    HomeThreadList(store: store)
                 }
                 DemoControls(store: store)
             }
@@ -53,6 +48,171 @@ struct HomeView: View {
         .background(Color(.systemGroupedBackground))
         .navigationTitle("Curio")
         .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+struct HomeThreadList: View {
+    let store: CurioStore
+
+    var body: some View {
+        let threads = store.homeThreads()
+        ForEach(threads) { thread in
+            ThreadCard(store: store, thread: thread)
+        }
+        if threads.isEmpty {
+            ContentUnavailableView(
+                "Nothing here yet",
+                systemImage: "photo.on.rectangle.angled",
+                description: Text("Create an invitation or switch test accounts.")
+            )
+        }
+    }
+}
+
+struct InboxActivityList: View {
+    let store: CurioStore
+
+    var body: some View {
+        let activities = store.inboxActivities()
+        ForEach(activities) { activity in
+            InboxActivityRow(store: store, activity: activity)
+        }
+        if activities.isEmpty {
+            ContentUnavailableView(
+                "No activity yet",
+                systemImage: "tray",
+                description: Text("Photo replies and messages from your threads will appear here.")
+            )
+        }
+    }
+}
+
+struct InboxActivityRow: View {
+    let store: CurioStore
+    let activity: InboxActivity
+
+    var body: some View {
+        Button {
+            if let thread = store.thread(id: activity.threadID) {
+                store.open(thread)
+            }
+        } label: {
+            HStack(spacing: 14) {
+                InboxActivityThumbnail(
+                    activity: activity,
+                    photos: store.thread(id: activity.threadID)?.photos ?? []
+                )
+                VStack(alignment: .leading, spacing: 5) {
+                    InboxActivityText(
+                        activity: activity,
+                        actorName: store.name(for: activity.actorID)
+                    )
+                    if let thread = store.thread(id: activity.threadID) {
+                        Text(thread.prompt)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                    }
+                }
+                Spacer(minLength: 4)
+                Text(activity.occurredAt, style: .relative)
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+            }
+            .padding(12)
+            .background(.white, in: RoundedRectangle(cornerRadius: 18))
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+struct InboxActivityThumbnail: View {
+    let activity: InboxActivity
+    let photos: [CurioPhoto]
+
+    var body: some View {
+        switch activity.kind {
+        case .photo(let photo):
+            PhotoTile(photo: photo, name: "")
+                .frame(width: 64, height: 64)
+        case .message:
+            InboxPhotoGrid(photos: photos)
+                .frame(width: 64, height: 64)
+        }
+    }
+}
+
+struct InboxGridSlot: Identifiable {
+    let id: Int
+    let photo: CurioPhoto?
+}
+
+struct InboxPhotoGrid: View {
+    let photos: [CurioPhoto]
+
+    var body: some View {
+        let slots = (0..<9).map { index in
+            InboxGridSlot(id: index, photo: photos.indices.contains(index) ? photos[index] : nil)
+        }
+        LazyVGrid(
+            columns: Array(repeating: GridItem(.flexible(), spacing: 1), count: 3),
+            spacing: 1
+        ) {
+            ForEach(slots) { slot in
+                InboxPhotoGridCell(photo: slot.photo)
+                    .aspectRatio(1, contentMode: .fit)
+            }
+        }
+        .padding(2)
+        .background(.black, in: RoundedRectangle(cornerRadius: 9))
+        .clipShape(RoundedRectangle(cornerRadius: 9))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Thread photos, \(photos.count) of 9 filled")
+    }
+}
+
+struct InboxPhotoGridCell: View {
+    let photo: CurioPhoto?
+
+    var body: some View {
+        ZStack {
+            if let photo {
+                Color.curio(photo.colorName)
+                if let imageData = photo.imageData, let image = UIImage(data: imageData) {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                } else {
+                    Image(systemName: photo.symbol)
+                        .resizable()
+                        .scaledToFit()
+                        .padding(3)
+                        .foregroundStyle(.white)
+                }
+            } else {
+                Color(.secondarySystemBackground)
+            }
+        }
+        .clipped()
+    }
+}
+
+struct InboxActivityText: View {
+    let activity: InboxActivity
+    let actorName: String
+
+    var body: some View {
+        switch activity.kind {
+        case .photo:
+            Text("\(actorName) responded with a photo")
+                .font(.headline)
+                .foregroundStyle(.primary)
+        case .message(let message):
+            Text("\(actorName) said “\(message.body)”")
+                .font(.headline)
+                .foregroundStyle(.primary)
+                .lineLimit(2)
+        }
     }
 }
 
@@ -187,30 +347,38 @@ struct PhotoTile: View {
     let name: String
 
     var body: some View {
-        ZStack {
-            LinearGradient(
-                colors: [Color.curio(photo.colorName), Color.curio(photo.colorName).opacity(0.45)],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            if let imageData = photo.imageData, let image = UIImage(data: imageData) {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFill()
-            } else {
-                Image(systemName: photo.symbol)
-                    .font(.system(size: 54, weight: .medium))
-                    .foregroundStyle(.white)
+        GeometryReader { geometry in
+            ZStack {
+                LinearGradient(
+                    colors: [Color.curio(photo.colorName), Color.curio(photo.colorName).opacity(0.45)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                if let imageData = photo.imageData, let image = UIImage(data: imageData) {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+                        .clipped()
+                } else {
+                    Image(systemName: photo.symbol)
+                        .font(.system(size: 54, weight: .medium))
+                        .foregroundStyle(.white)
+                }
+                if !name.isEmpty {
+                    Text(name)
+                        .font(.caption.bold())
+                        .foregroundStyle(.white)
+                        .padding(8)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+                }
             }
-            Text(name)
-                .font(.caption.bold())
-                .foregroundStyle(.white)
-                .padding(8)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+            .frame(width: geometry.size.width, height: geometry.size.height)
+            .clipped()
+            .clipShape(RoundedRectangle(cornerRadius: 18))
         }
-        .clipShape(RoundedRectangle(cornerRadius: 18))
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(name)'s photo")
+        .accessibilityLabel(name.isEmpty ? "Photo" : "\(name)'s photo")
     }
 }
 
