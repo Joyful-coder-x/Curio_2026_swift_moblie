@@ -373,3 +373,12 @@ The earlier companion-only dialogue and its documentation requests are kept in t
 **User request summary (English):** Compare the current native build with the Round One requirements and identify completed features, gaps and priorities.
 
 **Assistant response summary (English):** Reviewed native v4 at 16f4653, the simulator evidence and Firebase functions, reran the SQLite checks, and separated local UI progress from outstanding privacy, persistence, timeline and two-client acceptance work.
+
+### 2026-11-19 — Latest repository progress in Chinese
+
+**User instruction (verbatim)**
+> Uh,用中文总结一下现在就是我最新的repo有什么改动，然后现在到哪一步了
+
+**User request summary (English):** Summarize the latest repository changes and current milestone in Chinese.
+
+**Assistant response summary (English):** Compared main at 87bb41f with the previous review and summarized the scenario fixtures, saved-frame styling, documented simulator checks and remaining multi-device acceptance work.
