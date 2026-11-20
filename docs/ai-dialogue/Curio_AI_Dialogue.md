@@ -201,3 +201,12 @@ The earlier companion-only dialogue and its documentation requests are kept in t
 **User request summary (English):** Assess whether there is enough information to draft the four design sheets and identify the remaining uncertainties.
 
 **Assistant response summary (English):** Prepared four review sheets and identified the decisions that still affect access, membership, capacity, deadlines and retention.
+
+### 2026-11-19 — Which design decisions are expensive to reverse?
+
+**User instruction (verbatim)**
+> 把这些带电问题帮我分为两类，一类是现在就必须要决定，因为后面不好改。就是如果我后面要改，它可能会动摇整个APP的数据框架。一类是我可以在APP发起以前再做决定，我再去细化
+
+**User request summary (English):** Group the outstanding decisions into those that could change the data architecture and those that can be refined before launch.
+
+**Assistant response summary (English):** Grouped the decisions by the cost of changing stored data, permissions and user promises, and documented the prerequisites that let the remaining details wait.
