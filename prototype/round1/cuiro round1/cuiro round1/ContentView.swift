@@ -1,5 +1,4 @@
 import SwiftUI
-import UIKit
 
 struct ContentView: View {
     @State private var store = CurioStore()
@@ -9,18 +8,14 @@ struct ContentView: View {
             HomeView(store: store)
                 .navigationDestination(for: CurioRoute.self) { route in
                     switch route {
-                    case .create:
-                        PhotoFormView(store: store, mode: .create)
-                    case .join(let threadID):
-                        PhotoFormView(store: store, mode: .join(threadID))
-                    case .thread(let threadID):
-                        ThreadView(store: store, threadID: threadID)
-                    case .journal(let threadID):
-                        JournalView(store: store, threadID: threadID)
+                    case .create: PhotoFormView(store: store, mode: .create)
+                    case .join(let threadID): PhotoFormView(store: store, mode: .join(threadID))
+                    case .thread(let threadID): ThreadView(store: store, threadID: threadID)
+                    case .journal(let threadID): JournalView(store: store, threadID: threadID)
                     }
                 }
         }
-        .tint(.black)
+        .tint(Color.curioAction)
     }
 }
 
@@ -28,282 +23,320 @@ struct HomeView: View {
     let store: CurioStore
 
     var body: some View {
+        Group {
+            switch store.selectedSection {
+            case .discover: DiscoverView(store: store)
+            case .inbox: InboxView(store: store)
+            case .mine: MineView(store: store)
+            }
+        }
+        .background(Color.curioCanvas.ignoresSafeArea())
+        .navigationTitle(title)
+        .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                SettingsAccountMenu(store: store)
+            }
+        }
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            CurioBottomNavigation(store: store)
+        }
+    }
+
+    private var title: String {
+        switch store.selectedSection {
+        case .discover: "Discover"
+        case .inbox: "Inbox"
+        case .mine: "Mine"
+        }
+    }
+}
+
+struct DiscoverView: View {
+    let store: CurioStore
+    private let columns = [
+        GridItem(.flexible(), spacing: 14, alignment: .top),
+        GridItem(.flexible(), spacing: 14, alignment: .top)
+    ]
+
+    var body: some View {
         ScrollView {
-            LazyVStack(spacing: 16) {
-                DemoAccountBar(store: store)
-                HomeHeader(store: store)
-                HomeSectionPicker(store: store)
-                if let notice = store.notice {
-                    NoticeBanner(text: notice)
-                }
-                if store.selectedSection == .inbox {
-                    InboxActivityList(store: store)
-                } else {
-                    HomeThreadList(store: store)
-                }
-                DemoControls(store: store)
-            }
-            .padding()
-        }
-        .background(Color(.systemGroupedBackground))
-        .navigationTitle("Curio")
-        .navigationBarTitleDisplayMode(.inline)
-    }
-}
-
-struct HomeThreadList: View {
-    let store: CurioStore
-
-    var body: some View {
-        let threads = store.homeThreads()
-        ForEach(threads) { thread in
-            ThreadCard(store: store, thread: thread)
-        }
-        if threads.isEmpty {
-            ContentUnavailableView(
-                "Nothing here yet",
-                systemImage: "photo.on.rectangle.angled",
-                description: Text("Create an invitation or switch test accounts.")
-            )
-        }
-    }
-}
-
-struct InboxActivityList: View {
-    let store: CurioStore
-
-    var body: some View {
-        let activities = store.inboxActivities()
-        ForEach(activities) { activity in
-            InboxActivityRow(store: store, activity: activity)
-        }
-        if activities.isEmpty {
-            ContentUnavailableView(
-                "No activity yet",
-                systemImage: "tray",
-                description: Text("Photo replies and messages from your threads will appear here.")
-            )
-        }
-    }
-}
-
-struct InboxActivityRow: View {
-    let store: CurioStore
-    let activity: InboxActivity
-
-    var body: some View {
-        Button {
-            if let thread = store.thread(id: activity.threadID) {
-                store.open(thread)
-            }
-        } label: {
-            HStack(spacing: 14) {
-                InboxActivityThumbnail(
-                    activity: activity,
-                    photos: store.thread(id: activity.threadID)?.photos ?? []
-                )
-                VStack(alignment: .leading, spacing: 5) {
-                    InboxActivityText(
-                        activity: activity,
-                        actorName: store.name(for: activity.actorID)
-                    )
-                    if let thread = store.thread(id: activity.threadID) {
-                        Text(thread.prompt)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .lineLimit(1)
+            VStack(spacing: 18) {
+                Picker("Discover source", selection: Bindable(store).discoverFilter) {
+                    ForEach(DiscoverFilter.allCases) { filter in
+                        Text(filter.rawValue).tag(filter)
                     }
                 }
-                Spacer(minLength: 4)
-                Text(activity.occurredAt, style: .relative)
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
-            }
-            .padding(12)
-            .background(.white, in: RoundedRectangle(cornerRadius: 18))
-        }
-        .buttonStyle(.plain)
-    }
-}
+                .pickerStyle(.segmented)
 
-struct InboxActivityThumbnail: View {
-    let activity: InboxActivity
-    let photos: [CurioPhoto]
-
-    var body: some View {
-        switch activity.kind {
-        case .photo(let photo):
-            PhotoTile(photo: photo, name: "")
-                .frame(width: 64, height: 64)
-        case .message:
-            InboxPhotoGrid(photos: photos)
-                .frame(width: 64, height: 64)
-        }
-    }
-}
-
-struct InboxGridSlot: Identifiable {
-    let id: Int
-    let photo: CurioPhoto?
-}
-
-struct InboxPhotoGrid: View {
-    let photos: [CurioPhoto]
-
-    var body: some View {
-        let slots = (0..<9).map { index in
-            InboxGridSlot(id: index, photo: photos.indices.contains(index) ? photos[index] : nil)
-        }
-        LazyVGrid(
-            columns: Array(repeating: GridItem(.flexible(), spacing: 1), count: 3),
-            spacing: 1
-        ) {
-            ForEach(slots) { slot in
-                InboxPhotoGridCell(photo: slot.photo)
-                    .aspectRatio(1, contentMode: .fit)
-            }
-        }
-        .padding(2)
-        .background(.black, in: RoundedRectangle(cornerRadius: 9))
-        .clipShape(RoundedRectangle(cornerRadius: 9))
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Thread photos, \(photos.count) of 9 filled")
-    }
-}
-
-struct InboxPhotoGridCell: View {
-    let photo: CurioPhoto?
-
-    var body: some View {
-        ZStack {
-            if let photo {
-                Color.curio(photo.colorName)
-                if let imageData = photo.imageData, let image = UIImage(data: imageData) {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFill()
-                } else {
-                    Image(systemName: photo.symbol)
-                        .resizable()
-                        .scaledToFit()
-                        .padding(3)
-                        .foregroundStyle(.white)
+                let threads = store.discoverThreads()
+                LazyVGrid(columns: columns, alignment: .leading, spacing: 18) {
+                    ForEach(threads) { thread in
+                        Button { store.open(thread) } label: {
+                            ThreadPolaroid(store: store, thread: thread)
+                        }
+                        .buttonStyle(.plain)
+                    }
                 }
-            } else {
-                Color(.secondarySystemBackground)
-            }
-        }
-        .clipped()
-    }
-}
 
-struct InboxActivityText: View {
-    let activity: InboxActivity
-    let actorName: String
-
-    var body: some View {
-        switch activity.kind {
-        case .photo:
-            Text("\(actorName) responded with a photo")
-                .font(.headline)
-                .foregroundStyle(.primary)
-        case .message(let message):
-            Text("\(actorName) said “\(message.body)”")
-                .font(.headline)
-                .foregroundStyle(.primary)
-                .lineLimit(2)
-        }
-    }
-}
-
-struct DemoAccountBar: View {
-    let store: CurioStore
-
-    var body: some View {
-        HStack {
-            Label("Simulator account", systemImage: "person.crop.circle.badge.checkmark")
-                .font(.caption.weight(.semibold))
-            Spacer()
-            Picker("Simulator account", selection: Bindable(store).selectedUserID) {
-                ForEach(CurioStore.users) { user in
-                    Text("\(user.id) · \(user.name)").tag(user.id)
+                if threads.isEmpty {
+                    ContentUnavailableView(
+                        "No open invitations",
+                        systemImage: "person.2.slash",
+                        description: Text("People you follow have no open threads right now.")
+                    )
+                    .padding(.vertical, 50)
                 }
             }
-            .pickerStyle(.menu)
+            .padding(.horizontal, 22)
+            .padding(.top, 8)
+            .padding(.bottom, 24)
         }
-        .padding(12)
-        .background(.white, in: RoundedRectangle(cornerRadius: 14))
-        .onChange(of: store.selectedUserID) {
-            store.path.removeAll()
-            store.notice = "Signed in locally as \(store.selectedUser.name)."
+        .overlay(alignment: .bottomTrailing) {
+            Button { store.path.append(.create) } label: {
+                Image(systemName: "plus")
+                    .font(.title2.weight(.semibold))
+                    .frame(width: 52, height: 52)
+                    .foregroundStyle(.white)
+                    .background(Color.curioAction, in: Circle())
+                    .shadow(color: .black.opacity(0.15), radius: 5, y: 3)
+            }
+            .accessibilityLabel("New invitation")
+            .padding(.trailing, 22)
+            .padding(.bottom, 18)
         }
     }
 }
 
-struct HomeHeader: View {
+struct InboxView: View {
     let store: CurioStore
 
     var body: some View {
-        HStack(alignment: .bottom) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Photo invitations")
-                    .font(.largeTitle.bold())
-                Text("Share one moment. Build one journal.")
-                    .foregroundStyle(.secondary)
+        ScrollView {
+            LazyVStack(spacing: 0) {
+                let threads = store.inboxThreads()
+                ForEach(threads) { thread in
+                    InboxThreadRow(store: store, thread: thread)
+                }
+                if threads.isEmpty {
+                    ContentUnavailableView(
+                        "No activity yet",
+                        systemImage: "tray",
+                        description: Text("Threads appear here after you contribute and someone adds a photo or message.")
+                    )
+                    .padding(.top, 80)
+                }
             }
-            Spacer()
-            Button {
-                store.path.append(.create)
-            } label: {
-                Label("New", systemImage: "plus")
-            }
-            .buttonStyle(.borderedProminent)
+            .padding(.horizontal, 22)
         }
     }
 }
 
-struct HomeSectionPicker: View {
-    let store: CurioStore
-
-    var body: some View {
-        Picker("Library", selection: Bindable(store).selectedSection) {
-            ForEach(HomeSection.allCases) { section in
-                Text(section.rawValue).tag(section)
-            }
-        }
-        .pickerStyle(.segmented)
-    }
-}
-
-struct ThreadCard: View {
+struct InboxThreadRow: View {
     let store: CurioStore
     let thread: CurioThread
 
     var body: some View {
-        Button {
-            store.open(thread)
-        } label: {
-            VStack(alignment: .leading, spacing: 12) {
-                PhotoTile(photo: thread.photos[0], name: store.name(for: thread.creatorID))
-                    .frame(height: 180)
-                Text("\(store.name(for: thread.creatorID)) · \(thread.isPrivate ? "Private" : "Public")")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Text(thread.prompt)
-                    .font(.title2.bold())
-                    .foregroundStyle(.primary)
-                HStack {
-                    Label(thread.isExpired ? "Saved" : thread.isFull ? "Full" : "Open", systemImage: thread.isExpired ? "book.closed.fill" : "clock")
-                    Spacer()
-                    Text("\(thread.photos.count)/9")
+        Button { store.open(thread) } label: {
+            HStack(spacing: 12) {
+                CompactThreadThumbnail(thread: thread)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(thread.prompt)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Color.curioInk)
+                        .lineLimit(1)
+                    Text(store.latestActivityText(for: thread))
+                        .font(.caption)
+                        .foregroundStyle(Color.curioSecondary)
+                        .lineLimit(2)
                 }
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.secondary)
+                Spacer(minLength: 4)
+                Text(thread.latestActivityAt, style: .relative)
+                    .font(.caption2)
+                    .foregroundStyle(Color.curioSecondary)
             }
-            .padding()
-            .background(.white, in: RoundedRectangle(cornerRadius: 24))
+            .padding(.vertical, 14)
+            .overlay(alignment: .bottom) { Divider().foregroundStyle(Color.curioEdge) }
         }
         .buttonStyle(.plain)
+    }
+}
+
+struct MineView: View {
+    let store: CurioStore
+    @State private var showsFollowing = false
+    private let columns = [GridItem(.flexible(), spacing: 14), GridItem(.flexible(), spacing: 14)]
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                MineProfileHeader(store: store)
+                Button {
+                    showsFollowing = true
+                } label: {
+                    HStack {
+                        Label("Following", systemImage: "person.2")
+                        Spacer()
+                        Text("\(store.followedUsers.count)")
+                        Image(systemName: "chevron.right")
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Color.curioInk)
+                    .padding(14)
+                    .background(Color.curioPaper, in: RoundedRectangle(cornerRadius: 14))
+                }
+                .buttonStyle(.plain)
+                Picker("Thread role", selection: Bindable(store).mineFilter) {
+                    ForEach(MineFilter.allCases) { filter in
+                        Text(filter.rawValue).tag(filter)
+                    }
+                }
+                .pickerStyle(.segmented)
+                MineSection(title: "Active", threads: store.mineThreads(saved: false), store: store, archived: false, columns: columns)
+                MineSection(title: "Saved journals", threads: store.mineThreads(saved: true), store: store, archived: true, columns: columns)
+                DemoControls(store: store)
+            }
+            .padding(.horizontal, 22)
+            .padding(.bottom, 24)
+        }
+        .sheet(isPresented: $showsFollowing) {
+            FollowingListView(store: store)
+        }
+    }
+}
+
+struct FollowingListView: View {
+    let store: CurioStore
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            List(store.followedUsers) { user in
+                HStack(spacing: 12) {
+                    Text(String(user.name.prefix(1)))
+                        .font(.headline)
+                        .frame(width: 38, height: 38)
+                        .foregroundStyle(Color.curioPlum)
+                        .background(Color.curioAvatar, in: Circle())
+                    VStack(alignment: .leading) {
+                        Text(user.name).font(.headline)
+                        Text("\(user.id) · Test \(user.testRole.lowercased())")
+                            .font(.caption)
+                            .foregroundStyle(Color.curioSecondary)
+                    }
+                }
+            }
+            .navigationTitle("Following")
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") { dismiss() }
+                }
+            }
+        }
+        .presentationDetents([.medium, .large])
+    }
+}
+
+struct MineProfileHeader: View {
+    let store: CurioStore
+
+    var body: some View {
+        HStack(spacing: 14) {
+            Text(String(store.selectedUser.name.prefix(1)))
+                .font(.title2.bold())
+                .frame(width: 52, height: 52)
+                .foregroundStyle(Color.curioPlum)
+                .background(Color.curioAvatar, in: Circle())
+            VStack(alignment: .leading, spacing: 3) {
+                Text(store.selectedUser.name).font(.title2.bold())
+                Text("\(store.selectedUser.id) · Test \(store.selectedUser.testRole.lowercased())")
+                    .font(.caption)
+                    .foregroundStyle(.white.opacity(0.8))
+            }
+            .foregroundStyle(.white)
+            Spacer()
+        }
+        .padding(.horizontal, 18)
+        .padding(.vertical, 14)
+        .background(Color.curioPlum, in: RoundedRectangle(cornerRadius: 16))
+    }
+}
+
+struct MineSection: View {
+    let title: String
+    let threads: [CurioThread]
+    let store: CurioStore
+    let archived: Bool
+    let columns: [GridItem]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(title).font(.title2.bold()).foregroundStyle(Color.curioInk)
+            if threads.isEmpty {
+                Text("Nothing here yet.").font(.subheadline).foregroundStyle(Color.curioSecondary)
+            } else {
+                LazyVGrid(columns: columns, spacing: 18) {
+                    ForEach(threads) { thread in
+                        Button { store.open(thread) } label: {
+                            ThreadPolaroid(store: store, thread: thread, archived: archived)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct SettingsAccountMenu: View {
+    let store: CurioStore
+
+    var body: some View {
+        Menu {
+            Section("Signed in as \(store.selectedUser.name)") {
+                ForEach(CurioStore.users) { user in
+                    Button {
+                        store.switchAccount(to: user.id)
+                    } label: {
+                        if user.id == store.selectedUserID {
+                            Label("\(user.id) · \(user.name) — \(user.testRole)", systemImage: "checkmark")
+                        } else {
+                            Text("\(user.id) · \(user.name) — \(user.testRole)")
+                        }
+                    }
+                }
+            }
+        } label: {
+            Image(systemName: "gearshape")
+                .frame(width: 44, height: 44)
+        }
+        .accessibilityLabel("Settings and account")
+    }
+}
+
+struct CurioBottomNavigation: View {
+    let store: CurioStore
+
+    var body: some View {
+        HStack {
+            ForEach(HomeSection.allCases) { section in
+                Button {
+                    store.selectedSection = section
+                    store.path.removeAll()
+                } label: {
+                    VStack(spacing: 3) {
+                        Image(systemName: store.selectedSection == section ? "\(section.symbol).fill" : section.symbol)
+                        Text(section.rawValue).font(.system(size: 13, weight: .medium))
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 44)
+                    .foregroundStyle(store.selectedSection == section ? Color.curioSelected : Color.curioSecondary)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(.horizontal, 8)
+        .padding(.top, 6)
+        .background(Color.curioPaper.shadow(.drop(color: .black.opacity(0.08), radius: 2, y: -1)))
     }
 }
 
@@ -312,76 +345,16 @@ struct DemoControls: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Round-one test controls")
-                .font(.headline)
-            Text("These controls are simulator-only. Firebase Emulator accounts replace this switcher in the connected build.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+            Text("Round-one test controls").font(.headline)
             HStack {
                 Button("Advance 10 min") { store.advanceDemoClock() }
-                    .buttonStyle(.bordered)
                 Button("Reset samples") { store.resetFixtures() }
-                    .buttonStyle(.bordered)
             }
+            .buttonStyle(.bordered)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 18))
+        .background(Color.curioPaper, in: RoundedRectangle(cornerRadius: 14))
     }
 }
 
-struct NoticeBanner: View {
-    let text: String
-
-    var body: some View {
-        Label(text, systemImage: "info.circle.fill")
-            .font(.subheadline)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding()
-            .background(Color.blue.opacity(0.12), in: RoundedRectangle(cornerRadius: 14))
-    }
-}
-
-struct PhotoTile: View {
-    let photo: CurioPhoto
-    let name: String
-
-    var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                LinearGradient(
-                    colors: [Color.curio(photo.colorName), Color.curio(photo.colorName).opacity(0.45)],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                if let imageData = photo.imageData, let image = UIImage(data: imageData) {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: geometry.size.width, height: geometry.size.height)
-                        .clipped()
-                } else {
-                    Image(systemName: photo.symbol)
-                        .font(.system(size: 54, weight: .medium))
-                        .foregroundStyle(.white)
-                }
-                if !name.isEmpty {
-                    Text(name)
-                        .font(.caption.bold())
-                        .foregroundStyle(.white)
-                        .padding(8)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
-                }
-            }
-            .frame(width: geometry.size.width, height: geometry.size.height)
-            .clipped()
-            .clipShape(RoundedRectangle(cornerRadius: 18))
-        }
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(name.isEmpty ? "Photo" : "\(name)'s photo")
-    }
-}
-
-#Preview {
-    ContentView()
-}
+#Preview { ContentView() }

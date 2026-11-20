@@ -2,6 +2,157 @@
 
 Updated: November 19, 2026 (America/New_York)
 
+## Current redesign in progress — Discover visual standard
+
+The latest Round One direction replaces the earlier card-list home with the repository's `Discover.jpg` and `Curio_Visual_Guide.md` as the visual acceptance standard. Work currently in progress includes:
+
+- A shared Polaroid/thread component with one-image, 2×2, and 3×3 collage modes.
+- A 25-thread, two-column Discover fixture matching the 390 pt measurements.
+- Bottom Home / Inbox / Mine navigation and a top-right settings gear containing the A–J simulator account switcher.
+- One-row-per-thread Inbox treatment, chronological mixed photo/message timelines, Mine filters, and personalized archived journal covers.
+- Four saved simulator screenshots and A/B, capacity, expiry, and final-submit regression evidence.
+
+The fixture/data model, shared Polaroid collage, Visual Guide color tokens, two-column Discover shell, bottom navigation, settings account menu, local Random/Following filter, Mine Following sheet, and deadline-sensitive paper tint are now implemented. Xcode diagnostics are clear and the full project builds successfully. The thread timeline and Journal redesign, four final simulator screenshots, and complete acceptance tests are not yet complete and must not be treated as delivered until a later verification entry says so.
+
+### Latest checkpoint
+
+- Build: **Pass** — full Xcode build completed without errors after the Following and deadline-frame changes.
+- Discover: **focused simulator pass** — Random is the default; B's Following feed contains exactly three open Maya/A threads and no unfollowed creators.
+- Mine: **focused simulator pass** — B shows Following 1 and the sheet lists only Maya/A.
+- Inbox: one-row-per-thread layout is visible, but the center-divider visual bug remains documented and actual JPG fixture photos are not yet connected.
+- Photo flow: square crop, preview, prompt suggestions, and final-submit guard remain present from the previous verified build.
+- Thread/Journal: still use portions of the earlier UI and require the requested chronological timeline and shared archived Polaroid pass.
+- Firebase/private access: still presentation-only and not secure; emulator repository, follower writes, invitation redemption, and rules enforcement remain future work.
+
+The detailed working/partial/not-working matrix is saved in [Curio current UI flow audit](../progress/Curio_UI_Flow_Audit_2026-11-19.md).
+
+### Latest simulator screenshots
+
+| Discover Random | Discover Following |
+|---|---|
+| ![Discover Random](../progress/screenshots/2026-11-19-discover-random.png) | ![Discover Following](../progress/screenshots/2026-11-19-discover-following.png) |
+
+| Mine | Following list |
+|---|---|
+| ![Mine](../progress/screenshots/2026-11-19-mine-following-count.png) | ![Following sheet](../progress/screenshots/2026-11-19-mine-following-sheet.png) |
+
+### Original directions and response summaries
+
+#### Round One SwiftUI redesign
+
+**User command (verbatim)**
+
+> 请在现有 cuiro round1.xcodeproj 里修改 Round One 的 SwiftUI 界面。以任务单链接中的 Discover 最新截图为首页标准，以 Curio Visual Guide 为颜色和尺寸标准。按以下顺序实施：
+> 1. 先做一个共用的拍立得组件。 一个 thread 对应一张相纸。上方是正方形拼图，下方白边内放 prompt，作者、人数和剩余时间放在相纸外。1 张照片用单图，2–4 张用四宫格，5–9 张用九宫格。进行中的空位用稳定的照片色块填充。Home、Inbox 缩略图和 Mine 复用同一套拼图逻辑。
+> 2. 改 Discover。 去掉顶部 Curio 横幅和星星，使用可连续下滑的双列照片流，底部放 Home、Inbox、Mine。准备约 25 条示例 thread。以 390 pt 屏宽验收：左右边距各 22 pt，列间距 14 pt，每张卡宽 166 pt，内部图像为 150 × 150 pt。每张卡显示作者、实际参与人数和剩余时间。
+> 3. 改 Inbox 和群聊。 每个 thread 只占一行，显示 55 pt 拼图缩略图、prompt、最近动态和时间。点开后按时间混排照片和消息：有人加入，就自动出现姓名和新照片；自己发的气泡靠右，别人发的靠左。未加入的用户只能看邀请摘要。
+> 4. 改 Mine 和 Journal。 Mine 上方放个人信息，下方用 All / Created / Joined 筛选，并分成 Active 和 Saved journals。归档后一律显示九宫格，当前贡献者的照片在正中央，空位留白。成员可以重看聊天记录。
+> 5. 回归测试并交付。 用 A 发起、B 加入，验证照片和消息顺序、满 9 人退出 Discover、10 分钟后归档，以及 A、B 打开同一本日记时各自照片居中。特别检查已有的提交保护：确认裁切后进入预览，只有再点最终提交才会发布或加入。 最后提交可运行的 Xcode 改动、四张模拟器截图和测试结果。
+
+**Assistant response/action summary:** Audited the current repository against `Discover.jpg`, the Visual Guide, and the Round One contract; began the shared collage and fixture redesign, with screen completion and simulator acceptance still in progress.
+
+#### Settings account switcher
+
+**User command (verbatim)**
+
+> also, change the switch acound button to a setting gear logo on top right with the option to log into other account in it, so the UI
+
+**Assistant response/action summary:** Moved the A–J simulator account choice into the active redesign's top-right settings gear and removed the large account card from the planned content layout.
+
+#### Before-and-after simulator documentation
+
+**User command (verbatim)**
+
+> also when you are coding can you ass screen show to the simluate in the progress defore and after you make sugnificate changes? also save it as progress ducmation
+
+**Assistant response/action summary:** Established a before/after simulator screenshot workflow, saved the first regression pair in `docs/progress/screenshots/`, and linked it from this document.
+
+Future progress entries will pair the exact user command that caused a material implementation change with a summary of the assistant's actual response and outcome. The chronological [Curio AI Dialogue](Curio_AI_Dialogue.md) remains the complete instruction record.
+
+#### Audit the current UI flow
+
+**User command (verbatim)**
+
+> go through the user UI flow that should be set up by current version, save screen shot of what is happending, and document what is working/notworking
+
+**Assistant response/action summary:** Confirmed that the project builds and started a simulator-based current-state audit covering Discover, settings, Inbox, Mine, create/confirm, visitor/member thread behavior, and Journal; the final evidence report is still in progress.
+
+#### Inbox center-divider issue
+
+**User command (verbatim)**
+
+> [Attached image: Screenshot 2026-11-19 at 10.43.48 PM.png]
+>
+> why is there a thin line in the very center
+
+**Assistant response/action summary:** Identified that a `Divider` attached to the row `HStack` resolves vertically and stacks into a center line; documented the required explicit one-point horizontal separator fix.
+
+![Inbox center-divider visual bug](../progress/screenshots/2026-11-19-inbox-center-divider-bug.png)
+
+#### Inbox fixture-photo limitation
+
+**User command (verbatim)**
+
+> [Attached image: Screenshot 2026-11-19 at 10.44.33 PM.png]
+>
+> why is the image not showing
+
+**Assistant response/action summary:** Confirmed that current fixture contributions contain colors and SF Symbols with `imageData: nil`; actual repository JPG samples are not yet bundled and assigned to the 25 native fixture threads.
+
+![Inbox placeholder collage instead of bundled sample photos](../progress/screenshots/2026-11-19-inbox-placeholder-collage.png)
+
+#### Add screenshots to progress
+
+**User command (verbatim)**
+
+> can you add photo to progress
+
+**Assistant response/action summary:** Saved both user-provided Inbox screenshots in `docs/progress/screenshots/` and embedded them beside their diagnosed issues in this progress document.
+
+#### Public versus private audit
+
+**User command (verbatim)**
+
+> do current version handle provate vs public?
+
+**Assistant response/action summary:** Reported that the picker and local `isPrivate` value exist, but following delivery, invite redemption, viewer grants, Discover filtering, Firebase Auth, and server/rules enforcement are not implemented, so private mode is not secure.
+
+#### Discover Following filter and Mine list
+
+**User command (verbatim)**
+
+> in discover add button to swich from random to follwed, and, also in Mine, add a button to see who I folloed
+
+**Assistant response/action summary:** Added a Random/Following segmented control to Discover and a Following row and sheet in Mine, backed by temporary account-specific fixture relationships with B following A; the Xcode build passes and simulator verification is in progress.
+
+#### Deadline-sensitive Polaroid frames
+
+**User command (verbatim)**
+
+> add this: for that are closer to deadline(10min) make the color darker, that is the closer it is to the 10 mmin deadline, the more close it is to 502653, the apply to the white frame of the images
+
+**Assistant response/action summary:** Changed active Polaroid paper frames to interpolate from warm paper toward `#502653` as the ten-minute deadline approaches, including compact Inbox thumbnails, while keeping archived paper light and maintaining caption contrast.
+
+#### Keep progress documentation current during work
+
+**User command (verbatim)**
+
+> updata the progress along the way
+
+**Assistant response/action summary:** Updated this document immediately with the latest successful build, completed UI pieces, saved evidence, known issues, and the simulator checks that remain in progress, and will continue doing so at material checkpoints.
+
+#### Reorganize simulator accounts by test scenario
+
+**User command (verbatim)**
+
+> change the name of the tester account, to Maya(create) , Jun(test save), Rea(test join) etc.... so basci reorgnize these account and set up to a place that is easy to test different feture
+
+**Assistant response/action summary:** Labeled stable accounts A–J with explicit Round One roles—create, saved journal, join, member chat, near deadline, full thread, empty Inbox/visitor, private follower, ninth-slot race, and invite-link access—then simulator-verified all menu labels and C/Rea's Mine role.
+
+| Scenario account menu | C/Rea join-test profile |
+|---|---|
+| ![Settings menu showing A-J test roles](../progress/screenshots/2026-11-19-settings-test-roles.png) | ![Mine showing Rea's join-test role](../progress/screenshots/2026-11-19-rea-join-test-mine.png) |
+
 This document records what Round 1 started with, what changed, what failed, how those problems were addressed, and which parts are intentionally temporary. It is a development handoff, not a claim that the production Firebase or multi-iPhone version is complete.
 
 ## Screenshot documentation practice
