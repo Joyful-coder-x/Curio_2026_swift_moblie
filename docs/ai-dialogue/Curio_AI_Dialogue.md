@@ -219,3 +219,12 @@ The earlier companion-only dialogue and its documentation requests are kept in t
 **User request summary (English):** Set a nine-person cap including the creator, keep chat for the 12-hour group and its archive, separate following from contributing, and center each viewer’s immutable photo on their journal cover.
 
 **Assistant response summary (English):** Updated the design sheets, README and backend brief pointers with the nine-person lifecycle, contributor-specific cover, follow actions, retained chat and immutable photos.
+
+### 2026-11-19 — Small first-round prototype and storage contract
+
+**User instruction (verbatim)**
+> 呃，我现在想写这个 first round prototype，应该写哪些就是功能？就是 first round，然后这个东西要小一些，不能太复杂，但是要把最重要的功能都测试出来，然后要把 workflow 测试出来，然后要把 backend 的这个 data SQL 设计出来，然后测试。你帮我看一下要测试哪些，然后把 SQL 的就是那个 storage 的规则写明掉。
+
+**User request summary (English):** Define a minimal first-round prototype that exercises the workflow, specify the backend data and storage rules, and identify the tests to run.
+
+**Assistant response summary (English):** Added a four-view prototype assignment, draft Firestore and Storage rules, a SQLite reference schema and passing local constraint checks, plus acceptance cases for Firebase and two-client verification.

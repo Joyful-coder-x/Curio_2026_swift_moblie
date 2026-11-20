@@ -1,0 +1,18 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /photos/{uid}/{assetId}/photo.jpg {
+      function asset() {
+        return firestore.get(/databases/(default)/documents/assets/$(assetId)).data;
+      }
+      allow create: if request.auth != null && request.auth.uid == uid
+                    && asset().ownerUid == uid && asset().state == 'pending'
+                    && request.time < asset().expiresAt
+                    && request.resource.size > 0 && request.resource.size <= 5 * 1024 * 1024
+                    && request.resource.contentType == 'image/jpeg';
+      allow get: if request.auth != null && asset().ownerUid == uid
+                 && (asset().state == 'committed'
+                     || (asset().state == 'pending' && request.auth.uid == uid));
+    }
+  }
+}
