@@ -1,7 +1,7 @@
 # Curio — AI dialogue record
 
 ## Scope and attribution
-This record covers only Curio-related discussion visible in the current chat, through the request to document both candidate projects. User quotations preserve original wording, spelling and punctuation; excerpts are explicitly identified. Assistant responses are summaries, not verbatim transcripts. Uploaded proposal documents are source materials, not user dialogue. No earlier conversations have been reconstructed.
+This record covers only Curio-related discussion visible in the current chat, including later design iterations and the ongoing instruction log. User quotations preserve original wording, spelling and punctuation; excerpts are explicitly identified. Assistant responses are summaries, not verbatim transcripts. Uploaded proposal documents are source materials, not user dialogue. No earlier conversations have been reconstructed.
 
 **Current confirmed name: Curio.** Match Me, Qiro and Curro appear below only where they occurred historically. The existing GitHub repository spelling is unchanged.
 
@@ -73,6 +73,37 @@ User, verbatim:
 > [https://github.com/Joyful-coder-x/exercise_companion_2026_swift_moblie.git](https://github.com/Joyful-coder-x/exercise_companion_2026_swift_moblie.git) 这个 exercise companion 应该在这里头，不在那个。就是这是两个分开的 project，然后要有自己的计划。就是这两个会并行。准确地说是，我下周会……我下周五前会测试，会写两个小测试，来测试它们两个的可能性。然后确定以后，在下周五会把它再减成一个，然后去把它落实。
 
 Assistant summary: separated the repositories and plans. Both small feasibility tests run in parallel before Friday, November 20, 2026. On that Friday, compare findings and select one project; only the selected project proceeds to full implementation. The other is paused. Earlier plans describing the sequence less precisely are superseded by this clarification.
+
+## Historical backfill — course deliverables
+
+Earlier course instructions supplied by the user (verbatim excerpt, before the two-project discussion):
+
+> - write your final project proposal on your wiki page
+>   - describe your final project
+>   - include week by week work plan
+>   - pair up to give get feedback on you final project proposal
+> - create a Week10 folder for your project
+> - OR a create github private or public repo and add link to it on the wiki home work page
+> - if you create a private repo give Professor and at least one other student access
+> - [wiki home page week10](https://github.com/molab-itp/content-2026-ima/wiki#week-10-homework)
+>   - update your wiki page with your
+>     - progress | problems | plans | questions
+
+The project-specific portions of that message appear in section 5 and the companion record. The assistant gave feedback in chat; the conversation does not establish a wiki publication.
+
+**User instruction (verbatim)**
+> 呃，根据现在的情况给我写一个那个，就是这个叫什么 weekly，就是 weekly report吧。嗯。
+
+**User request summary (English):** Write a weekly report based on current progress.
+**Assistant response summary (English):** Drafted a Week 10 report in English covering progress, problems, plans and questions for both candidates.
+
+**User instruction (verbatim)**
+> 在这两个repo repository的这个README里头分别写一个feature的table，就是它要有哪些功能。
+
+**User request summary (English):** Add a feature table to each project's README.
+**Assistant response summary (English):** Added and pushed separate English tables distinguishing prototype, MVP and future features.
+
+The earlier companion-only dialogue and its documentation requests are kept in the [Exercising Companion record](https://github.com/Joyful-coder-x/exercise_companion_2026_swift_moblie/blob/main/docs/ai-dialogue/Exercising_Companion_AI_Dialogue.md). The identical publish-and-follow request repeated in chat is represented once below.
 
 ## Ongoing instruction log
 
@@ -153,3 +184,11 @@ Assistant summary: separated the repositories and plans. Both small feasibility 
 > Based on the conversation so far, what are like keywords and key idea and sort of research I should look into in terms of user experience, data managing, or even like rules that may help me to get this app work better and like hits, meets more people's will and like make the experience flawless
 
 **Assistant response summary (English):** Suggested search terms, readings, participant tasks and Firebase edge-case tests to evaluate contribution motivation, audience expectations, thread discovery, notification choices, journal value and lifecycle reliability.
+
+### 2026-11-19 — Dialogue audit and design fundamentals
+
+**User instruction (verbatim)**
+> First of all, so far with all the conversation, have you logged everything? If not, do so。然后是这样的，你可能理解的有点问题。你理解的是在就这东西做完了以后怎么做 human test？我的问题是说我们现在在以，就是我现在在以前端后端 UI UX等各种角色来设计这个东西的时候，我需要脑子里想哪些东西？我需要考虑什么？就是从一个设计者的角度。因为我对设计这个东西没有特别多的基础。有哪些东西要注意的？比如说这个 data storage我应该注意什么？我应该提前设计什么？有哪些规则我应该先制定？然后我以一个 front end的这个 UI UX human experience的角度，我应该注意什么？然后我以一个 security的角度我应该注意什么？有哪些关键词我需要去，就是哪些关键的算是知识点，注意点
+
+**User request summary (English):** Audit and backfill the dialogue, then explain the product rules, data, UI/UX and security concepts to consider while designing Curio.
+**Assistant response summary (English):** Reviewed both project records, backfilled omissions, and outlined design decisions and search terms using Curio's thread lifecycle, photo submission and sharing boundaries.
