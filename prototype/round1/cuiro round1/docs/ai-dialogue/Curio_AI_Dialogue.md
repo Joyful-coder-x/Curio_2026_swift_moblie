@@ -82,3 +82,10 @@
 > inbox should be empty for people thathave not yet contribute to the threat
 
 **Assistant response summary (English):** Changed Inbox filtering so only contributors see a thread there; non-contributors continue to find eligible invitations in Discover.
+
+### 2026-11-19 — Check following and private access
+
+**User instruction (verbatim)**
+> do current version handle following and all that?
+
+**Assistant response summary (English):** Audited the current SwiftUI code and reported that following, private viewer grants, invitation redemption, and Firebase authorization are not implemented yet; only the public/private UI flag exists.
