@@ -228,17 +228,38 @@ function events(t) {
   const messages = t.messages.map((m, i) => ({...m, at: m.at ?? start + photos.length + i}));
   return [...photos, ...messages].sort((a, b) => a.at - b.at);
 }
-function threadCover(t) {
-  const n = t.photos.length === 1 ? 1 : t.photos.length <= 4 ? 2 : 3;
+function threadCover(t, caption = false) {
+  const n = expired(t) ? 3 : t.photos.length === 1 ? 1 : t.photos.length <= 4 ? 2 : 3;
   const tones = ["#ca7a77","#ae9258","#c2a050","#cbb878","#7a7d7f","#b8861d","#d29020","#9e7952","#c3a455"];
+  let ordered = t.photos;
+  if (expired(t)) {
+    const center = t.photos.find(p => p.u === u) || t.photos[0];
+    ordered = t.photos.filter(p => p !== center);
+    while (ordered.length < 8) ordered.push(null);
+    ordered.splice(4, 0, center);
+  }
   const cells = Array.from({length:n*n}, (_, i) => {
-    if (t.photos[i]) return '<img alt="" src="' + esc(t.photos[i].src) + '">';
+    if (ordered[i]) return '<img alt="" src="' + esc(ordered[i].src) + '">';
+    if (expired(t)) return '<i class="empty-slot"></i>';
     const sample = t.photos[i % t.photos.length];
     const index = tones.findIndex((_, j) => sample.src === img(j+1));
     const tone = sample.color || tones[index] || "#dbc5aa";
     return '<i style="background:' + (/^#[0-9a-f]{6}$/i.test(tone) ? tone : "#dbc5aa") + '"></i>';
   });
-  return '<span class="mini-print"><span class="mosaic" style="--cols:'+n+'">'+cells.join("")+'</span></span>';
+  return '<span class="mini-print"><span class="mosaic" style="--cols:'+n+'">'+cells.join("")+'</span>' + (caption ? '<em>'+esc(t.q)+'</em>' : '') + '</span>';
+}
+let mineFilter = "All";
+function collection(threads) {
+  if (!threads.length) return "<small>No threads here yet.</small>";
+  return '<div class="collection">' + threads.map(t => {
+    const meta = tab === "Mine" ? (owner(t) === u ? "Created" : "Joined") : name(owner(t));
+    return `<button class="print-card" onclick="openThread('${t.id}')">${threadCover(t, true)}<small>${meta} · ${t.photos.length}/9 · ${state(t)}</small></button>`;
+  }).join("") + '</div>';
+}
+function mineView(list) {
+  const active = list.filter(t => !expired(t)), saved = list.filter(expired);
+  const visible = t => mineFilter === "All" || (owner(t) === u ? "Created" : "Joined") === mineFilter;
+  return '<div class="profile-head"><h1>'+name(u)+'</h1><small>'+list.filter(t=>owner(t)===u).length+' created · '+list.filter(t=>owner(t)!==u).length+' joined · '+saved.length+' saved</small></div><div class="row">'+["All","Created","Joined"].map(x=>button(x,"mineFilter='"+x+"';render()",mineFilter===x?"on":"")).join("")+'</div><h2>Active</h2>'+collection(active.filter(visible).sort((a,b)=>a.end-b.end))+'<h2>Saved journals</h2>'+collection(saved.filter(visible).sort((a,b)=>b.end-a.end));
 }
 function inboxRows(list) {
   const rows = list.map(t => {
@@ -271,44 +292,9 @@ function render() {
             ? member(t) || t.delivered.includes(u)
             : !expired(t) && !full(t)),
     );
-    s =
-      '<h1>' + (tab === 'Inbox' ? 'Inbox' : 'Photo invitations') + '</h1><div class="row">' +
-      ["Discover", "Inbox", "Mine"]
-        .map((x) => button(x, "tab='" + x + "';home()", x === tab ? "on" : ""))
-        .join("") +
-      "</div>";
-    s += tab === "Inbox" ? inboxRows(list) :
-      list
-        .map(
-          (t) =>
-            '<article class="card"><img alt="Opening photo" src="' +
-            esc(t.photos[0].src) +
-            '"><small>' +
-            name(owner(t)) +
-            " · " +
-            (t.private ? "Private" : "Public") +
-            (tab === "Mine"
-              ? owner(t) === u
-                ? " · Created by you"
-                : " · Joined by you"
-              : "") +
-            (tab === "Inbox" && member(t) && t.lastPhotoAt
-              ? " · Latest photo by " + name(t.photos[t.photos.length - 1].u)
-              : "") +
-            "</small><h2>" +
-            esc(t.q) +
-            "</h2><p>" +
-            state(t) +
-            " · " +
-            t.photos.length +
-            "/9</p>" +
-            button(
-              expired(t) ? "Open journal" : "Open thread",
-              "openThread('" + t.id + "')",
-            ) +
-            "</article>",
-        )
-        .join("") || "<p>No invitations here yet.</p>";
+    if (tab === "Mine") s = mineView(list);
+    else if (tab === "Inbox") s = "<h1>Inbox</h1>" + inboxRows(list);
+    else s = "<h1>Discover</h1>" + collection(list);
     s +=
       '<details><summary>Open invitation code</summary><input id="code" placeholder="Invitation code">' +
       button("Open", "redeem(document.getElementById(\'code\').value)") +
@@ -453,7 +439,7 @@ function render() {
   document.getElementById("page").innerHTML =
     s + '<p id="notice" role="status">' + esc(notice) + "</p>";
   document.getElementById("nav").innerHTML =
-    button("Home", "home()") + button("+ New invitation", "compose()");
+    ["Discover","Inbox","Mine"].map(x => button(x === "Discover" ? "Home" : x, "tab='"+x+"';home()",page === "home" && tab === x ? "selected-tab" : "")).join("") + button("+ New invitation", "compose()");
 }
 async function copyLink() {
   const link = location.href.split("#")[0] + "#invite=" + chosen().token;

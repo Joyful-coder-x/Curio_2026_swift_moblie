@@ -1,5 +1,7 @@
 # Build Curio’s first iOS prototype
 
+[Unified interface and page inventory](UI_INVENTORY.md)
+
 Curio is a shared photo journal. Maya photographs a yellow bicycle and asks “Find something yellow.” Jun opens the invitation and sees the bicycle. When Jun adds a photo of a lemon, Jun takes the second of nine places and can speak in the thread. Ten minutes after Maya published, both can reopen the journal. Maya sees the bicycle in the center of the cover. Jun sees the lemon in the center. Both see the same photos and chat history.
 
 **Your assignment:** implement this exchange between two independent SwiftUI clients using Firebase. Submit a runnable Xcode target, an emulator-backed service and evidence that the acceptance cases below pass. Use [the round-one rules and data contract](README.md) for implementation decisions. The original concept proposal and older backend briefs describe earlier versions.

@@ -229,3 +229,24 @@ summary {
 .bubble p {background:#ede7e0;border-radius:3px 14px 14px;padding:8px 12px;margin:3px 0}
 .bubble.mine {align-self:flex-end;text-align:right}
 .bubble.mine p {background:#eadce4;border-radius:14px 3px 14px 14px;text-align:left}
+
+:root {
+  --paper: #fffcf5;
+  --canvas: #f3f0e9;
+  --ink: #49392f;
+  --plum: #59434d;
+}
+main {background:var(--canvas); color:var(--ink)}
+header,footer {background:var(--paper)}
+footer {position:sticky;bottom:0;gap:3px;flex-wrap:wrap;padding:8px}
+footer button {font-size:13px}
+.selected-tab {color:#982e50;font-weight:700}
+.collection {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 14px}
+.print-card {display:block;text-align:left;border:0;padding:0;min-width:0}
+.mini-print {background:var(--paper);border-color:#dfd9ce}
+.print-card .mini-print {padding:7px 7px 0}
+.print-card em {display:grid;align-content:center;min-height:38px;padding:5px;text-align:center;font:italic 15px/1.16 Georgia,serif;overflow-wrap:anywhere}
+.print-card small {font-size:11px;margin-top:5px}
+.profile-head {background:var(--plum);color:var(--paper);padding:14px 18px;margin-bottom:12px}
+.profile-head small {color:var(--paper)}
+.empty-slot {background:#e9e4dc}
