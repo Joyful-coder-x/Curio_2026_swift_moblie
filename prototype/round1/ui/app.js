@@ -1,0 +1,483 @@
+const users = "ABCDEFGHIJ".split(""),
+  names = [
+    "Maya",
+    "Jun",
+    "Rae",
+    "Leo",
+    "Ana",
+    "Sam",
+    "Iris",
+    "Uma",
+    "Noa",
+    "Kai",
+  ];
+const name = (u) => names[users.indexOf(u)],
+  img = (n) => "assets/" + n + ".jpg",
+  esc = (s) =>
+    String(s).replace(
+      /[&<>"']/g,
+      (c) =>
+        ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;",
+        })[c],
+    );
+const key = "curio.r1.ui.v2",
+  now = () => Date.now() + db.offset,
+  owner = (t) => t.photos[0].u,
+  member = (t) => t.photos.some((p) => p.u === u),
+  expired = (t) => now() >= t.end,
+  full = (t) => t.photos.length === 9;
+function seed() {
+  const time = Date.now();
+  return {
+    offset: 0,
+    follows: { B: ["A"] },
+    threads: [
+      {
+        id: "YELLOW",
+        token: "YELLOW-WALK",
+        q: "Find something yellow.",
+        private: false,
+        end: time + 600000,
+        photos: [{ u: "A", src: img(1) }],
+        messages: [],
+        grants: [],
+        delivered: users.slice(1),
+      },
+      {
+        id: "SUNLIGHT",
+        token: "SUNLIGHT-WALK",
+        q: "What caught the sunlight?",
+        private: false,
+        end: time - 86400000,
+        photos: users.slice(0, 9).map((u, i) => ({ u, src: img(i + 1) })),
+        messages: [{ u: "B", text: "I found mine on the walk home." }],
+        grants: [],
+        delivered: users.slice(1),
+      },
+    ],
+  };
+}
+let db;
+try {
+  db = JSON.parse(localStorage.getItem(key));
+} catch {}
+db = db || seed();
+let u = users.includes(sessionStorage.curioUser)
+    ? sessionStorage.curioUser
+    : "A",
+  page = "home",
+  tab = "Discover",
+  id = "",
+  draft = null,
+  notice = "",
+  chatOpen = false;
+function save() {
+  try {
+    localStorage.setItem(key, JSON.stringify(db));
+  } catch {
+    notice =
+      "Device storage unavailable. This session will continue in memory.";
+  }
+}
+const follows = (a) => (db.follows[u] || []).includes(a),
+  can = (t) =>
+    !t.private || member(t) || follows(owner(t)) || t.grants.includes(u);
+const chosen = () => db.threads.find((t) => t.id === id),
+  button = (text, action, cls = "") =>
+    '<button class="' +
+    cls +
+    '" onclick="' +
+    action +
+    '">' +
+    esc(text) +
+    "</button>";
+function home() {
+  page = "home";
+  notice = "";
+  render();
+}
+function openThread(k) {
+  id = k;
+  const t = chosen();
+  if (!t || !can(t)) {
+    notice = "Access unavailable.";
+    page = "home";
+  } else {
+    page = expired(t) ? "journal" : "thread";
+    notice = "";
+    chatOpen = false;
+  }
+  render();
+}
+function redeem(code) {
+  let t = db.threads.find((t) => t.token === code.trim());
+  if (!t) {
+    notice = "Invitation code not found.";
+    render();
+    return;
+  }
+  if (!t.grants.includes(u)) t.grants.push(u);
+  save();
+  openThread(t.id);
+}
+function compose(join = false) {
+  draft = { join, src: "", confirmed: false, q: "", private: false };
+  page = "form";
+  notice = "";
+  render();
+}
+function follow(a) {
+  db.follows[u] = follows(a)
+    ? db.follows[u].filter((x) => x !== a)
+    : [...(db.follows[u] || []), a];
+  save();
+  render();
+}
+function publish() {
+  if (!draft?.confirmed) return;
+  const t = chosen();
+  if (draft.join) {
+    if (!t || !can(t) || expired(t) || full(t) || member(t)) {
+      notice = "Joining is unavailable. Your draft is still here.";
+      render();
+      return;
+    }
+    t.photos.push({ u, src: draft.src });
+    t.lastPhotoAt = now();
+    id = t.id;
+  } else {
+    if (!draft.q.trim()) return;
+    if (
+      db.threads.some(
+        (t) =>
+          owner(t) === u &&
+          new Date(t.end - 600000).toISOString().slice(0, 10) ===
+            new Date(now()).toISOString().slice(0, 10),
+      )
+    ) {
+      notice =
+        "One invitation per day. Switch to another test account to publish.";
+      render();
+      return;
+    }
+    id = crypto.randomUUID().slice(0, 8).toUpperCase();
+    db.threads.unshift({
+      id,
+      token: crypto.randomUUID(),
+      q: draft.q.trim(),
+      private: draft.private,
+      end: now() + 600000,
+      photos: [{ u, src: draft.src }],
+      messages: [],
+      grants: [],
+      delivered: users.filter(
+        (v) => v !== u && (!draft.private || (db.follows[v] || []).includes(u)),
+      ),
+    });
+  }
+  save();
+  draft = null;
+  openThread(id);
+}
+function send() {
+  let t = chosen(),
+    text = document.getElementById("msg").value.trim();
+  if (text && member(t) && !expired(t)) {
+    t.messages.push({ u, text });
+    save();
+  }
+  render();
+}
+async function pick(file) {
+  if (!file) return;
+  try {
+    const bmp = await createImageBitmap(file),
+      c = document.createElement("canvas"),
+      scale = Math.min(1, 720 / Math.max(bmp.width, bmp.height));
+    c.width = bmp.width * scale;
+    c.height = bmp.height * scale;
+    c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+    draft.src = c.toDataURL("image/jpeg", 0.72);
+    bmp.close();
+    render();
+  } catch {
+    notice = "Choose a supported image or try a sample.";
+    render();
+  }
+}
+function state(t) {
+  return expired(t)
+    ? "Saved"
+    : (full(t) ? "Full" : "Open") +
+        " · " +
+        Math.ceil((t.end - now()) / 60000) +
+        " min left";
+}
+function render() {
+  let s = "",
+    t = chosen();
+  if ((page === "thread" || page === "journal") && (!t || !can(t)))
+    page = "home";
+  if (page === "thread" && expired(t)) page = "journal";
+  if (page === "home") {
+    let list = db.threads.filter(
+      (t) =>
+        can(t) &&
+        (tab === "Mine"
+          ? member(t)
+          : tab === "Inbox"
+            ? member(t) || t.delivered.includes(u)
+            : !expired(t) && !full(t)),
+    );
+    if (tab === "Inbox")
+      list.sort(
+        (a, b) =>
+          (b.lastPhotoAt || b.end - 600000) - (a.lastPhotoAt || a.end - 600000),
+      );
+    s =
+      '<h1>Photo invitations</h1><div class="row">' +
+      ["Discover", "Inbox", "Mine"]
+        .map((x) => button(x, "tab='" + x + "';home()", x === tab ? "on" : ""))
+        .join("") +
+      "</div>";
+    s +=
+      list
+        .map(
+          (t) =>
+            '<article class="card"><img alt="Opening photo" src="' +
+            esc(t.photos[0].src) +
+            '"><small>' +
+            name(owner(t)) +
+            " · " +
+            (t.private ? "Private" : "Public") +
+            (tab === "Mine"
+              ? owner(t) === u
+                ? " · Created by you"
+                : " · Joined by you"
+              : "") +
+            (tab === "Inbox" && member(t) && t.lastPhotoAt
+              ? " · Latest photo by " + name(t.photos[t.photos.length - 1].u)
+              : "") +
+            "</small><h2>" +
+            esc(t.q) +
+            "</h2><p>" +
+            state(t) +
+            " · " +
+            t.photos.length +
+            "/9</p>" +
+            button(
+              expired(t) ? "Open journal" : "Open thread",
+              "openThread('" + t.id + "')",
+            ) +
+            "</article>",
+        )
+        .join("") || "<p>No invitations here yet.</p>";
+    s +=
+      '<details><summary>Open invitation code</summary><input id="code" placeholder="Invitation code">' +
+      button("Open", "redeem(document.getElementById(\'code\').value)") +
+      "</details>";
+  }
+  if (page === "form") {
+    s =
+      "<small>" +
+      (draft.join ? "Reply to " + name(owner(t)) : "Create a thread") +
+      "</small><h1>" +
+      (draft.confirmed ? "Ready to send?" : "Choose your photo") +
+      "</h1>";
+    if (draft.src)
+      s +=
+        '<img class="hero" src="' +
+        esc(draft.src) +
+        '" alt="Photo for review">';
+    if (!draft.confirmed) {
+      s +=
+        '<label class="upload">Take a photo<input type="file" capture="environment" accept="image/*" onchange="pick(this.files[0])"></label><label class="upload">Choose from library<input type="file" accept="image/*" onchange="pick(this.files[0])"></label><p>Or choose a sample</p><div class="strip">' +
+        [1, 2, 3, 4]
+          .map(
+            (n) =>
+              '<button onclick="draft.src=img(' +
+              n +
+              ');render()"><img alt="Sample ' +
+              n +
+              '" src="' +
+              img(n) +
+              '"></button>',
+          )
+          .join("") +
+        "</div>";
+      if (draft.src)
+        s += button(
+          "Use this photo",
+          "draft.confirmed=true;render()",
+          "primary",
+        );
+    } else {
+      s += button("Retake", "draft.confirmed=false;draft.src='';render()");
+      if (!draft.join)
+        s +=
+          '<label for="q">What would you like to see?</label><input id="q" maxlength="140" value="' +
+          esc(draft.q) +
+          '" placeholder="Find something yellow." oninput="draft.q=this.value;document.getElementById(\'submit\').disabled=!this.value.trim()"><label>Audience</label><div class="row">' +
+          [false, true]
+            .map((p) =>
+              button(
+                p ? "Private" : "Public",
+                "draft.private=" + p + ";render()",
+                p === draft.private ? "on" : "",
+              ),
+            )
+            .join("") +
+          "</div><small>" +
+          (draft.private
+            ? "Followers receive it. Anyone signed in with the link can view."
+            : "Delivered to every other test account.") +
+          "</small>";
+      else s += "<h2>" + esc(t.q) + "</h2>";
+      s +=
+        '<p>Once accepted, your photo is permanent.</p><button id="submit" class="primary" ' +
+        (!draft.join && !draft.q.trim() ? "disabled" : "") +
+        ' onclick="publish()">' +
+        (draft.join ? "Send photo & join" : "Publish invitation") +
+        "</button>";
+    }
+  }
+  if (page === "thread" || page === "journal") {
+    s =
+      "<small>" +
+      name(owner(t)) +
+      " · " +
+      (t.private ? "Private" : "Public") +
+      "</small><h1>" +
+      esc(t.q) +
+      '</h1><span class="tag">' +
+      state(t) +
+      '</span> <span class="tag">' +
+      t.photos.length +
+      "/9 people</span>";
+    if (page === "thread") {
+      s +=
+        '<div class="strip">' +
+        t.photos
+          .map(
+            (p) =>
+              '<img src="' + esc(p.src) + '" alt="' + name(p.u) + ' photo">',
+          )
+          .join("") +
+        "</div>";
+      if (!member(t) && !full(t))
+        s += button("Add a photo", "compose(true)", "primary");
+      if (full(t)) s += "<p>All nine places are filled.</p>";
+    } else {
+      let center = t.photos.find((p) => p.u === u) || t.photos[0],
+        others = t.photos.filter((p) => p !== center);
+      s +=
+        '<div class="grid">' +
+        Array.from({ length: 9 }, (_, i) => {
+          let p = i === 4 ? center : others.shift();
+          return p
+            ? '<img src="' + esc(p.src) + '" alt="Photo by ' + name(p.u) + '">'
+            : "<span></span>";
+        }).join("") +
+        '</div><h2>Contributors</h2><div class="row">' +
+        t.photos
+          .map((p) =>
+            p.u === u
+              ? "<b>" + name(u) + " (you)</b>"
+              : button(
+                  name(p.u) + (follows(p.u) ? " ✓" : " +"),
+                  "follow('" + p.u + "')",
+                ),
+          )
+          .join("") +
+        "</div>";
+    }
+    if (member(t)) {
+      if (page === "journal")
+        s += button(
+          chatOpen ? "Hide conversation" : "View conversation",
+          "chatOpen=!chatOpen;render()",
+        );
+      if (page === "thread" || chatOpen) {
+        s +=
+          "<h2>Group chat</h2>" +
+          t.messages
+            .map(
+              (m) =>
+                '<p class="chat"><b>' +
+                name(m.u) +
+                "</b> " +
+                esc(m.text) +
+                "</p>",
+            )
+            .join("");
+        if (page === "thread")
+          s +=
+            '<input id="msg" aria-label="Group message" placeholder="Message the group…">' +
+            button("Send message", "send()");
+        else s += "<small>Archived · Read only</small>";
+      }
+    }
+    s +=
+      "<details><summary>Share invitation</summary><p>Code <b>" +
+      esc(t.token) +
+      "</b></p>" +
+      button("Copy link", "copyLink()") +
+      "</details>";
+  }
+  document.getElementById("page").innerHTML =
+    s + '<p id="notice" role="status">' + esc(notice) + "</p>";
+  document.getElementById("nav").innerHTML =
+    button("Home", "home()") + button("+ New invitation", "compose()");
+}
+async function copyLink() {
+  const link = location.href.split("#")[0] + "#invite=" + chosen().token;
+  try {
+    await navigator.clipboard.writeText(link);
+    notice = "Link copied.";
+  } catch {
+    notice = "Share code: " + chosen().token;
+  }
+  render();
+}
+person.innerHTML = users
+  .map((x) => '<option value="' + x + '">' + x + " · " + name(x) + "</option>")
+  .join("");
+save();
+person.value = u;
+person.onchange = () => {
+  sessionStorage.curioUser = u = person.value;
+  tab = "Discover";
+  home();
+};
+advance.onclick = () => {
+  db.offset += 600000;
+  save();
+  render();
+};
+reset.onclick = () => {
+  db = seed();
+  save();
+  tab = "Discover";
+  home();
+};
+window.onhashchange = () => {
+  if (location.hash.startsWith("#invite=")) redeem(location.hash.slice(8));
+};
+render();
+window.onhashchange();
+setInterval(() => {
+  if (page === "thread" && expired(chosen())) render();
+  else if (page === "thread")
+    document.querySelector(".tag").textContent = state(chosen());
+  else if (
+    page === "home" &&
+    !document.activeElement.matches("input,select,summary") &&
+    !document.querySelector("details[open]")
+  )
+    render();
+}, 10000);

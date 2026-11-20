@@ -1,5 +1,7 @@
 # Curio · First prototype assignment
 
+[Developer handoff, screen preview and interactive walkthrough](START_HERE.md)
+
 **Goal:** On two independent iOS clients, one user starts a thread and another joins with a photo. They can chat, reopen the same journal and see their own photo in the center. Use at least ten distinct Firebase Auth accounts. A–J are the first ten; additional accounts are supported. Use two clients to exercise a subset at a time. This is an implementation brief with a runnable SQL reference and draft Firebase rules.
 
 ## Build four small views

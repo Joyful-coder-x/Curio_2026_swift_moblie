@@ -237,3 +237,12 @@ The earlier companion-only dialogue and its documentation requests are kept in t
 **User request summary (English):** Shorten the test duration to ten minutes, support at least ten test accounts, distribute public threads to everyone and allow private threads through links or follows.
 
 **Assistant response summary (English):** Updated the test contract, SQL reference and draft access rules, added a local Auth seed script, and ran SQLite checks for distribution, expiry and private viewing.
+
+### 2026-11-19 — Four-screen UI prototype and developer handoff
+
+**User instruction (verbatim)**
+> 根据现在这个需求给我一个就是这四页的这个UI的 prototype。然后把它也存到这个 Git里头。然后把你前面就是把这个规则也存到 Git里。然后告诉我我怎么，就是我要把什么东西给这个写 prototype的人，就是等于我要把什么给另一个人，然后这个人在不知道这个 APP的情况下能写出来。要足够的detail
+
+**User request summary (English):** Create and save the four-screen UI prototype and current rules in Git, and provide a detailed handoff for a developer with no prior knowledge of Curio.
+
+**Assistant response summary (English):** Built a clickable four-screen browser reference, captured its screens, checked the main flows locally and wrote an English handoff covering the rules, Swift/Firebase implementation and two-client acceptance tests.
