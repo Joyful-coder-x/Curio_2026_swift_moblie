@@ -278,3 +278,12 @@ The earlier companion-only dialogue and its documentation requests are kept in t
 > use this as ecxample for home page and mine
 
 **Assistant response summary (English):** Used the supplied profile and feed screenshot to design a denser two-column Home and a profile-led Mine with working collection filters.
+
+### 2026-11-19 — Instant-photo frames on Home and Mine
+
+**User instruction (verbatim)**
+> 把那个图片整体占比稍微再小一些，然后让那个图片看起来参考派利德就是参考派利德的格式一些，就是给每个图片外头再加一个派利德一样的框框
+
+**User request summary (English):** Slightly reduce the photo footprint and give each photo an instant-print frame.
+
+**Assistant response summary (English):** Reduced Home and Mine cover widths to 92% and added warm white frames with deeper bottom borders scaled to each photo grid.
