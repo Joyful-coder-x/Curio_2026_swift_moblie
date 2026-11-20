@@ -271,3 +271,10 @@ The earlier companion-only dialogue and its documentation requests are kept in t
 **User request summary (English):** Review the current SwiftUI logic and design denser thread presentations for Discover, Inbox and Mine using the adaptive photo cover.
 
 **Assistant response summary (English):** Added a three-surface layout study with two-column discovery, grouped inbox updates and an active/archive personal collection.
+
+### 2026-11-19 — Reference layout for Home and Mine
+
+**User instruction (verbatim)**
+> use this as ecxample for home page and mine
+
+**Assistant response summary (English):** Used the supplied profile and feed screenshot to design a denser two-column Home and a profile-led Mine with working collection filters.
