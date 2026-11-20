@@ -255,3 +255,10 @@ The earlier companion-only dialogue and its documentation requests are kept in t
 **User request summary (English):** Assess two ways to fill missing tiles on a Discover cover with colors sampled from contributed photos and explain how to build them in Swift.
 
 **Assistant response summary (English):** Proposed adaptive grids, cached dominant palettes and deterministic color selection, compared solid tiles with procedural mosaics, and explained how both fit the current discovery and archive rules.
+
+### 2026-11-19 — Check newly added prototype code
+
+**User instruction (verbatim)**
+> can you see the newlly add thing in repo
+
+**Assistant response summary (English):** Confirmed the v2 files on GitHub, including the SwiftUI prototype and Firebase callable functions, and identified the iOS target’s documented simulator demo mode.
