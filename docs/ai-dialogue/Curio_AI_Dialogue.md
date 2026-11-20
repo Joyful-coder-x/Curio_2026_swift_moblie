@@ -364,3 +364,12 @@ The earlier companion-only dialogue and its documentation requests are kept in t
 > updata dialogo
 
 **Assistant response summary (English):** Confirmed the Round One SwiftUI redesign handoff was already logged and added this request to the project dialogue.
+
+### 2026-11-19 — Round One feature acceptance review
+
+**User instruction (verbatim)**
+> 看一下现有的这个版本和咱们要求的有什么出入吗？然后有哪些东西可能需要改一改？有哪些 feature就我说round一应该达到的 feature，哪些达到了，哪些没有达到？
+
+**User request summary (English):** Compare the current native build with the Round One requirements and identify completed features, gaps and priorities.
+
+**Assistant response summary (English):** Reviewed native v4 at 16f4653, the simulator evidence and Firebase functions, reran the SQLite checks, and separated local UI progress from outstanding privacy, persistence, timeline and two-client acceptance work.
