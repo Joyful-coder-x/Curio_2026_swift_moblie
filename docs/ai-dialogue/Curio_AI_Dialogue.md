@@ -357,3 +357,10 @@ The earlier companion-only dialogue and its documentation requests are kept in t
 **User request summary (English):** Give the developer precise instructions for revising the current round-one prototype using the agreed palette and UI.
 
 **Assistant response summary (English):** Published a SwiftUI-specific assignment with reference precedence, component changes, dimensions, the existing submission guard and simulator acceptance criteria.
+
+### 2026-11-19 — Dialogue update
+
+**User instruction (verbatim)**
+> updata dialogo
+
+**Assistant response summary (English):** Confirmed the Round One SwiftUI redesign handoff was already logged and added this request to the project dialogue.
