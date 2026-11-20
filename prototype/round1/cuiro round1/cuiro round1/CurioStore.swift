@@ -168,7 +168,10 @@ final class CurioStore {
     private static func fixtures() -> [CurioThread] {
         let palette = ["yellow", "orange", "blue", "green", "purple", "pink", "mint", "indigo", "red"]
         let symbols = ["bicycle", "sun.max.fill", "camera.macro", "leaf.fill", "sparkles", "heart.fill", "drop.fill", "moon.stars.fill", "flame.fill"]
-        let completePhotos = zip(users.prefix(9), zip(symbols, palette)).map { user, visual in
+        // The saved journal fixture contains nine contributors, but G · Iris is
+        // intentionally not one of them so her Inbox demonstrates the empty state.
+        let journalUsers = users.filter { $0.id != "G" }
+        let completePhotos = zip(journalUsers.prefix(9), zip(symbols, palette)).map { user, visual in
             CurioPhoto(id: UUID(), userID: user.id, symbol: visual.0, colorName: visual.1)
         }
         return [

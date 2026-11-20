@@ -89,3 +89,12 @@
 > do current version handle following and all that?
 
 **Assistant response summary (English):** Audited the current SwiftUI code and reported that following, private viewer grants, invitation redemption, and Firebase authorization are not implemented yet; only the public/private UI flag exists.
+
+### 2026-11-19 — Fix G's incorrect Inbox membership
+
+**User instruction (verbatim)**
+> [Attached image: Screenshot 2026-11-19 at 9.21.51 PM.png]
+>
+> I should not be able to see this here, G is not in this threat the ibox should be empty 
+
+**Assistant response summary (English):** Corrected the saved-journal fixture so G · Iris is not a contributor and verified that her contributor-only Inbox shows the empty state.
